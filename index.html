@@ -262,7 +262,7 @@ function VergiPanel({data,co,gp}){
 
 /* ═══ FİNANS ANA MODÜL ═══ */
 function Finance({goHome,onNav,data,setData}){
-  const[co,setCo]=useState("ltd");const[sub,setSub]=useState("krediler");const[gp,setGp]=useState(3280);const[addOpen,setAddOpen]=useState(false);const[form,setForm]=useState({});const[selKredi,setSelKredi]=useState(null);
+  const[co,setCo]=useState("ltd");const[sub,setSub]=useState("krediler");const[gp,setGp]=useState(3280);const[addOpen,setAddOpen]=useState(false);const[form,setForm]=useState({});const[selKredi,setSelKredi]=useState(null);const[pSube,setPSube]=useState("tum");const[cekArama,setCekArama]=useState("");const[cekFiltre,setCekFiltre]=useState("tum");
   useEffect(()=>{fetch("https://api.collectapi.com/economy/goldPrice",{headers:{"authorization":"apikey 6UxMOmGMbHXBQcMpGDOy3p:0kAO5MkSr8dNlJiV5WOJlT","content-type":"application/json"}}).then(r=>r.json()).then(d=>{if(d.success&&d.result){const g=d.result.find(x=>x.name==="Gram Altın");if(g)setGp(Math.round(g.selling));}}).catch(()=>{});},[]);
 
   const d=data[co];const kT=d.krediler.reduce((s,k)=>s+k.monthly*k.remaining,0);const cT=d.kartlar.reduce((s,k)=>s+k.used,0);const sT=d.sahis.reduce((s,b)=>s+b.tutar,0);const aT=d.altin.reduce((s,a)=>s+a.gram*gp,0);const ckT=d.cekler.reduce((s,c)=>s+c.tutar,0);const grand=kT+cT+sT+aT+ckT;
@@ -282,7 +282,6 @@ function Finance({goHome,onNav,data,setData}){
 
   const renderItems=()=>{
     if(sub==="personel"){
-      const[pSube,setPSube]=useState("tum");
       const personel=d.personel||[];
       const subeler=[...new Set(personel.map(p=>p.sube))];
       const filtered=pSube==="tum"?personel:personel.filter(p=>p.sube===pSube);
@@ -476,7 +475,6 @@ function Finance({goHome,onNav,data,setData}){
     if(sub==="sahis")return d.sahis.map(b=><Row key={b.id} id={b.id} key2="sahis" main={b.kisi+" ("+b.tip+")"} detail="" value={b.tutar}/>);
     if(sub==="altin")return d.altin.map(a=><Row key={a.id} id={a.id} key2="altin" main={a.kisi} detail={a.gram+"g × ₺"+fmt(gp)} value={a.gram*gp}/>);
     if(sub==="cekler"){
-      const[cekArama,setCekArama]=useState("");const[cekFiltre,setCekFiltre]=useState("tum");
       const cekler=d.cekler||[];const bankalar=[...new Set(cekler.map(c=>c.banka||"Diğer"))];
       let filtered=cekler;
       if(cekArama)filtered=filtered.filter(c=>(c.banka||"").toLowerCase().includes(cekArama.toLowerCase())||(c.no||"").toLowerCase().includes(cekArama.toLowerCase())||(c.kime||"").toLowerCase().includes(cekArama.toLowerCase()));
