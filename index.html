@@ -25,10 +25,10 @@ function Field({label,value,onChange,type,placeholder,options}){return<div style
 function Modal({open,onClose,title,children}){if(!open)return null;return<div style={{position:"fixed",inset:0,zIndex:999,display:"flex",alignItems:"flex-end",justifyContent:"center"}}><div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.3)"}} onClick={onClose}/><div style={{position:"relative",width:"100%",maxWidth:500,maxHeight:"85vh",background:D.w,borderRadius:"20px 20px 0 0",overflow:"hidden",animation:"slideUp .4s cubic-bezier(.16,1,.3,1)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",borderBottom:`1px solid ${D.blueBd}`}}><h3 style={{fontWeight:700,fontSize:15}}>{title}</h3><button onClick={onClose} className="tap" style={{border:"none",background:D.blueMi,cursor:"pointer",width:30,height:30,borderRadius:15,fontSize:15,color:D.t2,display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button></div><div style={{padding:18,overflow:"auto",maxHeight:"70vh"}}>{children}</div></div></div>;}
 
 /* ═══ DATA ═══ */
-const SK="bardaks_v19";
+const SK="bardaks_v23";
 const ISB_AMORT=[{no:1,tarih:"29.01.2026",anapara:29304.94,faiz:19125.00,fon:0,vergi:956.25,taksit:49386.19,kalan:420695.06},{no:2,tarih:"02.03.2026",anapara:29361.10,faiz:19071.51,fon:0,vergi:953.58,taksit:49386.19,kalan:391333.96},{no:3,tarih:"30.03.2026",anapara:33087.13,faiz:15522.91,fon:0,vergi:776.15,taksit:49386.19,kalan:358246.83},{no:4,tarih:"29.04.2026",anapara:33399.43,faiz:15225.49,fon:0,vergi:761.27,taksit:49386.19,kalan:324847.40},{no:5,tarih:"01.06.2026",anapara:33440.24,faiz:15186.62,fon:0,vergi:759.33,taksit:49386.19,kalan:291407.16},{no:6,tarih:"29.06.2026",anapara:37249.08,faiz:11559.15,fon:0,vergi:577.96,taksit:49386.19,kalan:254158.08},{no:7,tarih:"29.07.2026",anapara:38044.38,faiz:10801.72,fon:0,vergi:540.09,taksit:49386.19,kalan:216113.70},{no:8,tarih:"31.08.2026",anapara:38777.70,faiz:10103.32,fon:0,vergi:505.17,taksit:49386.19,kalan:177336.00},{no:9,tarih:"29.09.2026",anapara:41736.36,faiz:7285.55,fon:0,vergi:364.28,taksit:49386.19,kalan:135599.64},{no:10,tarih:"30.10.2026",anapara:43133.36,faiz:5955.08,fon:0,vergi:297.75,taksit:49386.19,kalan:92466.28},{no:11,tarih:"30.11.2026",anapara:45122.34,faiz:4060.81,fon:0,vergi:203.04,taksit:49386.19,kalan:47343.94},{no:12,tarih:"29.12.2026",anapara:47343.94,faiz:1945.05,fon:0,vergi:97.25,taksit:49386.24,kalan:0}];
 const VAR_AMORT=[{no:1,tarih:"26.01.2026",anapara:69228.65,faiz:15902.38,bsmv:795.12,taksit:85926.15,kalan:849771.35},{no:2,tarih:"26.02.2026",anapara:70486.49,faiz:14704.44,bsmv:735.22,taksit:85926.15,kalan:779284.86},{no:3,tarih:"26.03.2026",anapara:71767.16,faiz:13484.75,bsmv:674.24,taksit:85926.15,kalan:707517.70},{no:4,tarih:"27.04.2026",anapara:73071.12,faiz:12242.89,bsmv:612.14,taksit:85926.15,kalan:634446.58},{no:5,tarih:"26.05.2026",anapara:74398.77,faiz:10978.46,bsmv:548.92,taksit:85926.15,kalan:560047.81},{no:6,tarih:"26.06.2026",anapara:75750.53,faiz:9691.07,bsmv:484.55,taksit:85926.15,kalan:484297.28},{no:7,tarih:"27.07.2026",anapara:77126.86,faiz:8380.28,bsmv:419.01,taksit:85926.15,kalan:407170.42},{no:8,tarih:"26.08.2026",anapara:78528.19,faiz:7045.68,bsmv:352.28,taksit:85926.15,kalan:328642.23},{no:9,tarih:"28.09.2026",anapara:79954.98,faiz:5686.83,bsmv:284.34,taksit:85926.15,kalan:248687.25},{no:10,tarih:"26.10.2026",anapara:81407.71,faiz:4303.28,bsmv:215.16,taksit:85926.15,kalan:167279.54},{no:11,tarih:"26.11.2026",anapara:82886.81,faiz:2894.61,bsmv:144.73,taksit:85926.15,kalan:84392.73},{no:12,tarih:"28.12.2026",anapara:84392.73,faiz:1460.33,bsmv:73.02,taksit:85926.08,kalan:0}];
-const defData={ltd:{krediler:[{id:1,bank:"Ziraat",monthly:11200,remaining:108,total:108,nextDate:"2026-04-02",ticari:true,faiz:3200,anapara:8000,paidMonths:[]},{id:2,bank:"İş Bankası (İşletme)",monthly:49386,remaining:12,total:12,nextDate:"2026-01-29",ticari:true,faiz:19125,anapara:29305,hesapNo:"7502-632803",toplamKredi:450000,ampirik:true,paidMonths:[]},{id:3,bank:"Vakıfbank",monthly:8500,remaining:84,total:84,nextDate:"2026-04-05",ticari:true,faiz:2800,anapara:5700,paidMonths:[]},{id:4,bank:"Halkbank",monthly:7600,remaining:72,total:72,nextDate:"2026-04-15",ticari:false,faiz:0,anapara:7600,paidMonths:[]},{id:5,bank:"Garanti",monthly:6900,remaining:60,total:60,nextDate:"2026-04-08",ticari:false,faiz:0,anapara:6900,paidMonths:[]}],kartlar:[{id:1,name:"Yapı Kredi",limit:200000,used:142000,odeme:"2026-04-05"},{id:2,name:"Garanti",limit:150000,used:98000,odeme:"2026-04-10"},{id:3,name:"İş Bankası",limit:120000,used:87000,odeme:"2026-04-15"}],sahis:[{id:1,kisi:"Tedarikçi A",tutar:68000,tip:"senetli"},{id:2,kisi:"Ekipman",tutar:45000,tip:"senetli"}],altin:[],cekler:[{id:1,no:"ÇK-001",tutar:35000,vade:"2026-04-12",kime:"Tedarikçi"},{id:2,no:"ÇK-002",tutar:28000,vade:"2026-04-20",kime:"Fırın"}],zRaporlari:[]},sahis:{krediler:[{id:6,bank:"QNB",monthly:8200,remaining:84,total:84,nextDate:"2026-04-03",ticari:false,faiz:0,anapara:8200,paidMonths:[]},{id:7,bank:"Denizbank",monthly:7100,remaining:72,total:72,nextDate:"2026-04-12",ticari:false,faiz:0,anapara:7100,paidMonths:[]},{id:8,bank:"TEB",monthly:6400,remaining:60,total:60,nextDate:"2026-04-07",ticari:false,faiz:0,anapara:6400,paidMonths:[]},{id:9,bank:"Akbank",monthly:5800,remaining:48,total:48,nextDate:"2026-04-18",ticari:false,faiz:0,anapara:5800,paidMonths:[]},{id:10,bank:"Şekerbank",monthly:4500,remaining:36,total:36,nextDate:"2026-04-20",ticari:false,faiz:0,anapara:4500,paidMonths:[]},{id:11,bank:"Vardarlar (Taşıt)",monthly:85926,remaining:12,total:12,nextDate:"2026-01-26",ticari:false,faiz:15902,anapara:69228,bsmv:795,sozlesmeNo:"20252048154-1",toplamKredi:919000,ampirik:true,paidMonths:[]}],kartlar:[{id:4,name:"Akbank",limit:100000,used:73000,odeme:"2026-04-18"},{id:5,name:"Denizbank",limit:80000,used:54000,odeme:"2026-04-25"}],sahis:[{id:3,kisi:"Ahmet Bey",tutar:52000,tip:"senetli"},{id:4,kisi:"Mustafa",tutar:35000,tip:"sözlü"},{id:5,kisi:"Emlakçı",tutar:28000,tip:"sözlü"}],altin:[{id:1,kisi:"Mehmet Abi",gram:150},{id:2,kisi:"Halil Usta",gram:80},{id:3,kisi:"Dayı Ahmet",gram:45},{id:4,kisi:"Osman Usta",gram:20}],cekler:[{id:3,no:"ÇK-003",tutar:22000,vade:"2026-04-25",kime:"Emlakçı"}],zRaporlari:[]}};
+const defData={ltd:{krediler:[{id:1,bank:"Ziraat",monthly:11200,remaining:108,total:108,nextDate:"2026-04-02",ticari:true,faiz:3200,anapara:8000,paidMonths:[]},{id:2,bank:"İş Bankası (İşletme)",monthly:49386,remaining:12,total:12,nextDate:"2026-01-29",ticari:true,faiz:19125,anapara:29305,hesapNo:"7502-632803",toplamKredi:450000,ampirik:true,paidMonths:[]},{id:3,bank:"Vakıfbank",monthly:8500,remaining:84,total:84,nextDate:"2026-04-05",ticari:true,faiz:2800,anapara:5700,paidMonths:[]},{id:4,bank:"Halkbank",monthly:7600,remaining:72,total:72,nextDate:"2026-04-15",ticari:false,faiz:0,anapara:7600,paidMonths:[]},{id:5,bank:"Garanti",monthly:6900,remaining:60,total:60,nextDate:"2026-04-08",ticari:false,faiz:0,anapara:6900,paidMonths:[]}],kartlar:[{id:1,name:"Yapı Kredi",limit:200000,used:142000,odeme:"2026-04-05"},{id:2,name:"Garanti",limit:150000,used:98000,odeme:"2026-04-10"},{id:3,name:"İş Bankası",limit:120000,used:87000,odeme:"2026-04-15"}],sahis:[{id:1,kisi:"Tedarikçi A",tutar:68000,tip:"senetli"},{id:2,kisi:"Ekipman",tutar:45000,tip:"senetli"}],altin:[],cekler:[{id:1,no:"ÇK-001",tutar:35000,vade:"2026-04-12",kime:"Tedarikçi"},{id:2,no:"ÇK-002",tutar:28000,vade:"2026-04-20",kime:"Fırın"}],kiralar:[{id:1,yer:"Meydan Dükkan",net:45000,gun:1},{id:2,yer:"İmalathane",net:25000,gun:1}],faturalar:[{id:1,tip:"Elektrik",tutar:8500,kdv:1700,kdvOran:20,tarih:"2026-03-15"},{id:2,tip:"Su",tutar:1200,kdv:240,kdvOran:20,tarih:"2026-03-15"},{id:3,tip:"İnternet",tutar:2500,kdv:500,kdvOran:20,tarih:"2026-03-10"}],zRaporlari:[]},sahis:{krediler:[{id:6,bank:"QNB",monthly:8200,remaining:84,total:84,nextDate:"2026-04-03",ticari:false,faiz:0,anapara:8200,paidMonths:[]},{id:7,bank:"Denizbank",monthly:7100,remaining:72,total:72,nextDate:"2026-04-12",ticari:false,faiz:0,anapara:7100,paidMonths:[]},{id:8,bank:"TEB",monthly:6400,remaining:60,total:60,nextDate:"2026-04-07",ticari:false,faiz:0,anapara:6400,paidMonths:[]},{id:9,bank:"Akbank",monthly:5800,remaining:48,total:48,nextDate:"2026-04-18",ticari:false,faiz:0,anapara:5800,paidMonths:[]},{id:10,bank:"Şekerbank",monthly:4500,remaining:36,total:36,nextDate:"2026-04-20",ticari:false,faiz:0,anapara:4500,paidMonths:[]},{id:11,bank:"Vardarlar (Taşıt)",monthly:85926,remaining:12,total:12,nextDate:"2026-01-26",ticari:false,faiz:15902,anapara:69228,bsmv:795,sozlesmeNo:"20252048154-1",toplamKredi:919000,ampirik:true,paidMonths:[]}],kartlar:[{id:4,name:"Akbank",limit:100000,used:73000,odeme:"2026-04-18"},{id:5,name:"Denizbank",limit:80000,used:54000,odeme:"2026-04-25"}],sahis:[{id:3,kisi:"Ahmet Bey",tutar:52000,tip:"senetli"},{id:4,kisi:"Mustafa",tutar:35000,tip:"sözlü"},{id:5,kisi:"Emlakçı",tutar:28000,tip:"sözlü"}],altin:[{id:1,kisi:"Mehmet Abi",gram:150},{id:2,kisi:"Halil Usta",gram:80},{id:3,kisi:"Dayı Ahmet",gram:45},{id:4,kisi:"Osman Usta",gram:20}],cekler:[{id:3,no:"ÇK-003",tutar:22000,vade:"2026-04-25",kime:"Emlakçı"}],kiralar:[{id:3,yer:"KTÜ Dükkan",net:22000,gun:1},{id:4,yer:"Samsun Dükkan",net:18000,gun:1}],faturalar:[{id:4,tip:"Elektrik",tutar:5200,kdv:1040,kdvOran:20,tarih:"2026-03-15"},{id:5,tip:"İnternet",tutar:1800,kdv:360,kdvOran:20,tarih:"2026-03-10"}],zRaporlari:[]}};
 function loadD(){try{const s=localStorage.getItem(SK);if(s)return JSON.parse(s);}catch(e){}return JSON.parse(JSON.stringify(defData));}
 function saveD(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
 
@@ -129,7 +129,7 @@ function VergiPanel({data,co,gp}){
 
   /* ─── KDV Hesaplama ─── */
   const hesaplananKDV=zr.reduce((s,r)=>s+(r.kdv1||0)+(r.kdv10||0)+(r.kdv20||0),0);
-  const alisFaturaKDV=42500; /* Alış faturalarındaki indirilecek KDV (demo — ileride cari'den beslenecek) */
+  const alisFaturaKDV=(d.faturalar||[]).reduce((s,f)=>s+(f.kdv||0),0);
   const odenecekKDV=Math.max(0,hesaplananKDV-alisFaturaKDV);
   const devredenKDV=Math.max(0,alisFaturaKDV-hesaplananKDV);
   const aylikCiro=zr.reduce((s,r)=>s+(r.ciro||0),0);
@@ -138,9 +138,9 @@ function VergiPanel({data,co,gp}){
   const faizGideri=d.krediler.filter(k=>k.ticari).reduce((s,k)=>s+(k.faiz||0)*((k.paidMonths||[]).length),0);
   const toplamFaizKalan=d.krediler.filter(k=>k.ticari).reduce((s,k)=>s+(k.faiz||0)*(k.remaining||0),0);
 
-  /* ─── Stopaj (Kira %20) ─── */
-  const kiralar=isLtd?[{yer:"Meydan Dükkan",brut:45000},{yer:"İmalathane",brut:25000}]:[{yer:"KTÜ Dükkan",brut:22000},{yer:"Samsun Dükkan",brut:18000}];
-  const topStopaj=kiralar.reduce((s,k)=>s+Math.round(k.brut*0.20),0);
+  /* ─── Stopaj (Kira %20) — gerçek datadan ─── */
+  const kiralar=d.kiralar||[];
+  const topStopaj=kiralar.reduce((s,k)=>s+Math.round(k.net*0.25),0); /* Net/0.8=Brüt, Brüt*0.2=Stopaj=Net*0.25 */
 
   /* ─── Gelir/Kurumlar Vergisi ─── */
   const yillikKar=aylikCiro*12*0.15; /* Tahmini %15 kar marjı */
@@ -192,8 +192,8 @@ function VergiPanel({data,co,gp}){
       <div className="fu" style={{background:D.w,borderRadius:16,padding:16,boxShadow:D.s1,marginBottom:12}}>
         <div style={{fontSize:13,fontWeight:700,marginBottom:10}}>🏠 Kira Stopajı (%20 Gelir Vergisi Kesintisi)</div>
         {kiralar.map((k,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:`1px solid ${D.blueGh}`,fontSize:13}}>
-          <div><div style={{fontWeight:600}}>{k.yer}</div><div style={{fontSize:11,color:D.t3}}>Brüt Kira: {fmtTL(k.brut)}</div></div>
-          <div style={{textAlign:"right"}}><div style={{fontWeight:700,color:D.r}}>Stopaj: {fmtTL(Math.round(k.brut*0.20))}</div><div style={{fontSize:10,color:D.t3}}>Net: {fmtTL(Math.round(k.brut*0.80))}</div></div>
+          <div><div style={{fontWeight:600}}>{k.yer}</div><div style={{fontSize:11,color:D.t3}}>Net: {fmtTL(k.net)} | Brüt: {fmtTL(Math.round(k.net/0.80))}</div></div>
+          <div style={{textAlign:"right"}}><div style={{fontWeight:700,color:D.r}}>Stopaj: {fmtTL(Math.round(k.net*0.25))}</div></div>
         </div>)}
         <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:800,paddingTop:10,color:D.r}}><span>Aylık Toplam Stopaj</span><span>{fmtTL(topStopaj)}</span></div>
       </div>
@@ -277,11 +277,82 @@ function Finance({goHome,onNav,data,setData}){
   const payTaksit=(krediId,taksitNo)=>{update("krediler",d.krediler.map(k=>{if(k.id!==krediId)return k;const pm=[...(k.paidMonths||[])];if(pm.includes(taksitNo))return k;pm.push(taksitNo);return{...k,remaining:Math.max(0,k.remaining-1),paidMonths:pm};}));};
   const addItem=()=>{if(sub==="krediler")update("krediler",[...d.krediler,{id:nid(),bank:form.bank||"Yeni",monthly:Number(form.monthly)||0,remaining:Number(form.remaining)||12,total:Number(form.remaining)||12,nextDate:form.nextDate||"2026-05-01",ticari:form.ticari==="true",faiz:Number(form.faiz)||0,anapara:Number(form.anapara)||0}]);if(sub==="kartlar")update("kartlar",[...d.kartlar,{id:nid(),name:form.name||"Yeni",limit:Number(form.limit)||0,used:Number(form.used)||0,odeme:form.odeme||"2026-05-01"}]);if(sub==="sahis")update("sahis",[...d.sahis,{id:nid(),kisi:form.kisi||"",tutar:Number(form.tutar)||0,tip:form.tip||"sözlü"}]);if(sub==="altin")update("altin",[...d.altin,{id:nid(),kisi:form.kisi||"",gram:Number(form.gram)||0}]);if(sub==="cekler")update("cekler",[...d.cekler,{id:nid(),no:form.no||"ÇK-"+nid(),tutar:Number(form.tutar)||0,vade:form.vade||"2026-05-01",kime:form.kime||""}]);setAddOpen(false);setForm({});};
 
-  const tabs=[{id:"krediler",l:"Krediler",e:"🏦"},{id:"sahis",l:"Borçlar",e:"🤝"},{id:"altin",l:"Altın",e:"🥇"},{id:"kartlar",l:"Kartlar",e:"💳"},{id:"cekler",l:"Çekler",e:"📄"},{id:"banka",l:"Banka",e:"🏧"},{id:"vergi",l:"Vergi",e:"📊"},{id:"konsolide",l:"Özet",e:"📋"}];
+  const tabs=[{id:"krediler",l:"Krediler",e:"🏦"},{id:"sahis",l:"Borçlar",e:"🤝"},{id:"altin",l:"Altın",e:"🥇"},{id:"kartlar",l:"Kartlar",e:"💳"},{id:"cekler",l:"Çekler",e:"📄"},{id:"gider",l:"Giderler",e:"🧾"},{id:"banka",l:"Banka",e:"🏧"},{id:"vergi",l:"Vergi",e:"📊"},{id:"konsolide",l:"Özet",e:"📋"}];
   const totals={krediler:kT,kartlar:cT,sahis:sT,altin:aT,cekler:ckT};
 
   const renderItems=()=>{
     if(sub==="vergi")return<VergiPanel data={data} co={co} gp={gp}/>;
+    if(sub==="gider"){
+      const kiralar=d.kiralar||[];const faturalar=d.faturalar||[];
+      const topKiraNet=kiralar.reduce((s,k)=>s+k.net,0);
+      const topStopaj=kiralar.reduce((s,k)=>s+Math.round(k.net*0.25),0); /* Brüt=Net/0.8, Stopaj=%20 of Brüt = Net*0.25 */
+      const topFatura=faturalar.reduce((s,f)=>s+f.tutar,0);
+      const topFaturaKDV=faturalar.reduce((s,f)=>s+(f.kdv||0),0);
+      const topGider=topKiraNet+topFatura;
+      const addKira=()=>{const yer=prompt("Dükkan/Depo Adı:");if(!yer)return;const net=Number(prompt("Net Kira (₺):")||0);if(!net)return;update("kiralar",[...kiralar,{id:nid(),yer,net,gun:1}]);};
+      const delKira=id=>update("kiralar",kiralar.filter(k=>k.id!==id));
+      const addFatura=()=>{const tip=prompt("Fatura Türü (Elektrik/Su/İnternet/Doğalgaz):");if(!tip)return;const tutar=Number(prompt("Tutar (KDV Hariç ₺):")||0);if(!tutar)return;const kdvOran=Number(prompt("KDV Oranı (1/10/20):")||20);const kdv=Math.round(tutar*kdvOran/100);update("faturalar",[...faturalar,{id:nid(),tip,tutar,kdv,kdvOran,tarih:TODAY.toISOString().split("T")[0]}]);};
+      const delFatura=id=>update("faturalar",faturalar.filter(f=>f.id!==id));
+
+      return<div>
+        {/* Özet */}
+        <div className="fu" style={{background:`linear-gradient(135deg,${D.blue},${D.blueDk})`,borderRadius:16,padding:16,marginBottom:12,color:D.w}}>
+          <div style={{fontSize:11,opacity:.6}}>Aylık Gider Özeti ({co==="ltd"?"Limited":"Şahıs"})</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginTop:10}}>
+            <div><div style={{fontSize:9,opacity:.5}}>Kiralar (Net)</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topKiraNet)}</div></div>
+            <div><div style={{fontSize:9,opacity:.5}}>Faturalar</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topFatura)}</div></div>
+            <div><div style={{fontSize:9,opacity:.5}}>Toplam Gider</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topGider)}</div></div>
+          </div>
+        </div>
+
+        {/* Kiralar */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+          <span style={{fontWeight:700,fontSize:14}}>🏠 Kiralar</span>
+          <button onClick={addKira} className="tap" style={{display:"flex",alignItems:"center",gap:3,padding:"4px 10px",borderRadius:50,border:"none",background:D.blue,cursor:"pointer",color:D.w,fontSize:10,fontWeight:700,fontFamily:D.f}}><Ic.Plus s={12} c={D.w}/>Kira Ekle</button>
+        </div>
+        <div className="fu" style={{background:D.w,borderRadius:14,boxShadow:D.s1,overflow:"hidden",marginBottom:14}}>
+          {kiralar.map((k,i)=>{const brut=Math.round(k.net/0.80);const stopaj=brut-k.net;
+          return<div key={k.id} style={{padding:"10px 14px",borderBottom:i<kiralar.length-1?`1px solid ${D.blueGh}`:"none",display:"flex",alignItems:"center"}}>
+            <div style={{flex:1}}><div style={{fontWeight:600,fontSize:13}}>{k.yer}</div>
+              <div style={{fontSize:11,color:D.t3}}>Net: {fmtTL(k.net)} | Brüt: {fmtTL(brut)} | Stopaj: <span style={{color:D.r,fontWeight:700}}>{fmtTL(stopaj)}</span></div>
+            </div>
+            <button onClick={()=>delKira(k.id)} className="tap" style={{padding:3,borderRadius:6,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={13} c={D.r}/></button>
+          </div>;})}
+          {kiralar.length===0&&<div style={{padding:14,textAlign:"center",fontSize:12,color:D.t3}}>Kira ekleyin</div>}
+          <div style={{padding:"10px 14px",background:D.blueMi,display:"flex",justifyContent:"space-between",fontSize:13}}>
+            <span style={{fontWeight:700}}>Toplam Stopaj (Muhtasar)</span>
+            <span style={{fontWeight:800,color:D.r}}>{fmtTL(topStopaj)}</span>
+          </div>
+        </div>
+
+        {/* Faturalar */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+          <span style={{fontWeight:700,fontSize:14}}>⚡ Faturalar</span>
+          <button onClick={addFatura} className="tap" style={{display:"flex",alignItems:"center",gap:3,padding:"4px 10px",borderRadius:50,border:"none",background:D.blue,cursor:"pointer",color:D.w,fontSize:10,fontWeight:700,fontFamily:D.f}}><Ic.Plus s={12} c={D.w}/>Fatura Ekle</button>
+        </div>
+        <div className="fu" style={{background:D.w,borderRadius:14,boxShadow:D.s1,overflow:"hidden",marginBottom:14}}>
+          {faturalar.map((f,i)=><div key={f.id} style={{padding:"10px 14px",borderBottom:i<faturalar.length-1?`1px solid ${D.blueGh}`:"none",display:"flex",alignItems:"center"}}>
+            <div style={{flex:1}}><div style={{fontWeight:600,fontSize:13}}>{f.tip}</div>
+              <div style={{fontSize:11,color:D.t3}}>Tutar: {fmtTL(f.tutar)} + KDV %{f.kdvOran}: {fmtTL(f.kdv)} = <strong>{fmtTL(f.tutar+f.kdv)}</strong> | {f.tarih}</div>
+            </div>
+            <button onClick={()=>delFatura(f.id)} className="tap" style={{padding:3,borderRadius:6,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={13} c={D.r}/></button>
+          </div>)}
+          {faturalar.length===0&&<div style={{padding:14,textAlign:"center",fontSize:12,color:D.t3}}>Fatura ekleyin</div>}
+          <div style={{padding:"10px 14px",background:D.gS,display:"flex",justifyContent:"space-between",fontSize:13}}>
+            <span style={{fontWeight:700}}>İndirilecek KDV (Faturalardan)</span>
+            <span style={{fontWeight:800,color:D.g}}>{fmtTL(topFaturaKDV)}</span>
+          </div>
+        </div>
+
+        {/* Vergi Etkisi */}
+        <div className="fu" style={{background:"rgba(232,156,28,0.08)",border:"1.5px solid rgba(232,156,28,0.2)",borderRadius:14,padding:"12px 14px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:D.o}}>📋 Vergi Etkisi</div>
+          <div style={{fontSize:12,color:D.t2,marginTop:4}}>Bu giderler {co==="ltd"?"%25 Kurumlar":"%15-40 Gelir"} vergisi matrahından düşülecek.</div>
+          <div style={{fontSize:12,color:D.t2,marginTop:2}}>Fatura KDV'leri ({fmtTL(topFaturaKDV)}) Z-Raporu KDV borcundan mahsup edilecek.</div>
+          <div style={{fontSize:12,fontWeight:700,color:D.g,marginTop:4}}>Tahmini Vergi Tasarrufu: {fmtTL(Math.round(topGider*(co==="ltd"?0.25:0.27)))}</div>
+        </div>
+      </div>;
+    }
     if(sub==="banka"){
       const zr=d.zRaporlari||[];const topKart=zr.reduce((s,r)=>s+(r.kart||0),0);const komisyon=Math.round(topKart*0.0165);const posAidat=350;const netGiris=topKart-komisyon-posAidat;
       return<div>
@@ -399,9 +470,9 @@ function Finance({goHome,onNav,data,setData}){
     <div style={{display:"flex",gap:3,padding:"8px 14px 0",overflowX:"auto"}}>{tabs.map(t=><button key={t.id} onClick={()=>setSub(t.id)} className="tap" style={{padding:"6px 9px",borderRadius:9,border:"none",cursor:"pointer",background:sub===t.id?D.blue:D.w,color:sub===t.id?D.w:D.t2,fontSize:10,fontWeight:600,fontFamily:D.f,whiteSpace:"nowrap",boxShadow:D.s1}}>{t.e} {t.l}</button>)}</div>
     <div style={{flex:1,overflow:"auto",padding:"8px 14px 90px"}}>
       {warns.length>0&&<div style={{background:D.rS,border:"1.5px solid rgba(220,62,53,.18)",borderRadius:12,padding:"10px 12px",marginBottom:8,animation:"glow 2s ease infinite"}}><div style={{display:"flex",alignItems:"center",gap:5,marginBottom:3}}><Ic.Alert s={15}/><span style={{fontWeight:700,color:D.r,fontSize:11}}>Kritik</span></div>{warns.slice(0,5).map((w,i)=><div key={i} style={{fontSize:10,color:D.r,paddingLeft:18}}>• {w}</div>)}</div>}
-      {sub!=="vergi"&&sub!=="banka"&&sub!=="konsolide"&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontWeight:700,fontSize:14}}>{tabs.find(t=>t.id===sub)?.e} {tabs.find(t=>t.id===sub)?.l} — {fmtTL(totals[sub]||0)}</span><button onClick={()=>{setForm({});setAddOpen(true);}} className="tap" style={{display:"flex",alignItems:"center",gap:3,padding:"5px 10px",borderRadius:50,border:"none",background:D.blue,cursor:"pointer",color:D.w,fontSize:11,fontWeight:700,fontFamily:D.f}}><Ic.Plus s={13} c={D.w}/>Ekle</button></div>}
-      {sub!=="vergi"&&sub!=="banka"&&sub!=="konsolide"&&<div style={{background:D.w,borderRadius:14,boxShadow:D.s1,border:`1px solid ${D.blueBd}`,overflow:"hidden"}}>{renderItems()}</div>}
-      {(sub==="vergi"||sub==="banka"||sub==="konsolide")&&renderItems()}
+      {sub!=="vergi"&&sub!=="banka"&&sub!=="konsolide"&&sub!=="gider"&&<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}><span style={{fontWeight:700,fontSize:14}}>{tabs.find(t=>t.id===sub)?.e} {tabs.find(t=>t.id===sub)?.l} — {fmtTL(totals[sub]||0)}</span><button onClick={()=>{setForm({});setAddOpen(true);}} className="tap" style={{display:"flex",alignItems:"center",gap:3,padding:"5px 10px",borderRadius:50,border:"none",background:D.blue,cursor:"pointer",color:D.w,fontSize:11,fontWeight:700,fontFamily:D.f}}><Ic.Plus s={13} c={D.w}/>Ekle</button></div>}
+      {sub!=="vergi"&&sub!=="banka"&&sub!=="konsolide"&&sub!=="gider"&&<div style={{background:D.w,borderRadius:14,boxShadow:D.s1,border:`1px solid ${D.blueBd}`,overflow:"hidden"}}>{renderItems()}</div>}
+      {(sub==="vergi"||sub==="banka"||sub==="konsolide"||sub==="gider")&&renderItems()}
     </div>
     <QBar onNav={onNav} active="finance"/>
     <Modal open={addOpen} onClose={()=>setAddOpen(false)} title={"Yeni Ekle"}>{renderForm()}<button onClick={addItem} className="tap" style={{width:"100%",padding:13,borderRadius:14,border:"none",background:D.blue,color:D.w,fontSize:14,fontWeight:700,cursor:"pointer",marginTop:6,fontFamily:D.f}}>Kaydet</button></Modal>
