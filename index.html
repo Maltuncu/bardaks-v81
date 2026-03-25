@@ -123,25 +123,140 @@ function ZRapor({sube,sirket,goHome,goBack,data,setData}){
 }
 
 /* ═══ VERGİ PANELİ ═══ */
-function VergiPanel({data,co,gp,goBack}){
-  const zr=data[co].zRaporlari||[];
-  const aylikKDV=zr.reduce((s,r)=>s+(r.kdv1||0)+(r.kdv10||0)+(r.kdv20||0),0);
+function VergiPanel({data,co,gp}){
+  const[vTab,setVTab]=useState("kdv");
+  const d=data[co];const zr=d.zRaporlari||[];const isLtd=co==="ltd";
+
+  /* ─── KDV Hesaplama ─── */
+  const hesaplananKDV=zr.reduce((s,r)=>s+(r.kdv1||0)+(r.kdv10||0)+(r.kdv20||0),0);
+  const alisFaturaKDV=42500; /* Alış faturalarındaki indirilecek KDV (demo — ileride cari'den beslenecek) */
+  const odenecekKDV=Math.max(0,hesaplananKDV-alisFaturaKDV);
+  const devredenKDV=Math.max(0,alisFaturaKDV-hesaplananKDV);
   const aylikCiro=zr.reduce((s,r)=>s+(r.ciro||0),0);
-  const faizGideri=data[co].krediler.filter(k=>k.ticari).reduce((s,k)=>s+(k.faiz||0)*((k.total||1)-(k.remaining||0)),0);
-  const kasaAciklari=zr.filter(r=>r.fark<0);
+
+  /* ─── Faiz Gideri (Vergi Kalkanı) ─── */
+  const faizGideri=d.krediler.filter(k=>k.ticari).reduce((s,k)=>s+(k.faiz||0)*((k.paidMonths||[]).length),0);
+  const toplamFaizKalan=d.krediler.filter(k=>k.ticari).reduce((s,k)=>s+(k.faiz||0)*(k.remaining||0),0);
+
+  /* ─── Stopaj (Kira %20) ─── */
+  const kiralar=isLtd?[{yer:"Meydan Dükkan",brut:45000},{yer:"İmalathane",brut:25000}]:[{yer:"KTÜ Dükkan",brut:22000},{yer:"Samsun Dükkan",brut:18000}];
+  const topStopaj=kiralar.reduce((s,k)=>s+Math.round(k.brut*0.20),0);
+
+  /* ─── Gelir/Kurumlar Vergisi ─── */
+  const yillikKar=aylikCiro*12*0.15; /* Tahmini %15 kar marjı */
+  let vergiOrani,vergiTutar;
+  if(isLtd){vergiOrani=25;vergiTutar=Math.round(yillikKar*0.25);}
+  else{/* Artan oranlı gelir vergisi 2026 */
+    if(yillikKar<=110000){vergiOrani=15;vergiTutar=Math.round(yillikKar*0.15);}
+    else if(yillikKar<=230000){vergiOrani=20;vergiTutar=Math.round(110000*0.15+(yillikKar-110000)*0.20);}
+    else if(yillikKar<=870000){vergiOrani=27;vergiTutar=Math.round(110000*0.15+120000*0.20+(yillikKar-230000)*0.27);}
+    else if(yillikKar<=3000000){vergiOrani=35;vergiTutar=Math.round(110000*0.15+120000*0.20+640000*0.27+(yillikKar-870000)*0.35);}
+    else{vergiOrani=40;vergiTutar=Math.round(110000*0.15+120000*0.20+640000*0.27+2130000*0.35+(yillikKar-3000000)*0.40);}
+  }
+  const vergiKalkani=faizGideri; /* Faiz gideri vergiden düşülür */
+  const netVergi=Math.max(0,vergiTutar-Math.round(vergiKalkani*(isLtd?0.25:vergiOrani/100)));
+
+  /* ─── Geçici Vergi ─── */
+  const geciciVergi=Math.round(netVergi/4);
+  const geciciTarihler=["14 Şubat","14 Mayıs","14 Ağustos","14 Kasım"];
+
+  /* ─── Damga Vergisi ─── */
+  const damgalar=[{ad:"KDV Beyanname",tutar:255.40},{ad:"Muhtasar Beyanname",tutar:255.40},{ad:"Geçici Vergi Beyanname",tutar:255.40},{ad:"SGK Bildirge",tutar:127.70}];
+  const topDamga=damgalar.reduce((s,d)=>s+d.tutar,0);
+
+  const vtabs=[{id:"kdv",l:"KDV"},{id:"stopaj",l:"Stopaj"},{id:"gelir",l:isLtd?"Kurumlar":"Gelir V."},{id:"gecici",l:"Geçici V."},{id:"damga",l:"Damga"},{id:"kalkan",l:"Kalkan"}];
 
   return<div style={{padding:0}}>
-    <div className="fu" style={{background:`linear-gradient(135deg,${D.blue},${D.blueDk})`,borderRadius:16,padding:"18px",marginBottom:12,color:D.w}}>
-      <div style={{fontSize:11,opacity:.6}}>Bu Ay Vergi Özeti ({co==="ltd"?"Limited":"Şahıs"})</div>
-      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:10}}>
-        <div><div style={{fontSize:10,opacity:.5}}>Biriken KDV</div><div style={{fontSize:20,fontWeight:800,fontFamily:D.fd}}>{fmtTL(aylikKDV)}</div></div>
-        <div><div style={{fontSize:10,opacity:.5}}>Aylık Ciro</div><div style={{fontSize:20,fontWeight:800,fontFamily:D.fd}}>{fmtTL(aylikCiro)}</div></div>
+    {/* Vergi Alt Tab */}
+    <div style={{display:"flex",gap:3,marginBottom:10,overflowX:"auto"}}>{vtabs.map(t=><button key={t.id} onClick={()=>setVTab(t.id)} className="tap" style={{padding:"5px 8px",borderRadius:8,border:"none",cursor:"pointer",background:vTab===t.id?D.o:D.w,color:vTab===t.id?D.w:D.t2,fontSize:10,fontWeight:600,fontFamily:D.f,whiteSpace:"nowrap",boxShadow:D.s1}}>{t.l}</button>)}</div>
+
+    {vTab==="kdv"&&<div>
+      <div className="fu" style={{background:`linear-gradient(135deg,${D.blue},${D.blueDk})`,borderRadius:16,padding:16,marginBottom:12,color:D.w}}>
+        <div style={{fontSize:11,opacity:.6}}>KDV Matrah Analizi ({isLtd?"Limited":"Şahıs"})</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginTop:10}}>
+          <div><div style={{fontSize:9,opacity:.5}}>Hesaplanan KDV</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd}}>{fmtTL(hesaplananKDV)}</div></div>
+          <div><div style={{fontSize:9,opacity:.5}}>İndirilecek KDV</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd}}>{fmtTL(alisFaturaKDV)}</div></div>
+          <div><div style={{fontSize:9,opacity:.5}}>{odenecekKDV>0?"Ödenecek":"Devreden"}</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd,color:odenecekKDV>0?"#FF6B6B":"#6BCB77"}}>{fmtTL(odenecekKDV||devredenKDV)}</div></div>
+        </div>
       </div>
-    </div>
-    {faizGideri>0&&<div className="fu" style={{background:D.w,borderRadius:14,padding:"14px 16px",boxShadow:D.s1,marginBottom:12,display:"flex",justifyContent:"space-between"}}><div><div style={{fontSize:12,fontWeight:700}}>Ticari Faiz Gideri</div><div style={{fontSize:10,color:D.t3}}>Vergiden düşülebilir</div></div><div style={{fontWeight:800,fontSize:16,color:D.o,fontFamily:D.fd}}>{fmtTL(faizGideri)}</div></div>}
-    {kasaAciklari.length>0&&<div className="fu" style={{background:D.rS,borderRadius:14,padding:"12px 14px",marginBottom:12}}><div style={{fontWeight:700,color:D.r,fontSize:13,marginBottom:6}}>⚠️ Kasa Açıkları</div>{kasaAciklari.map((r,i)=><div key={i} style={{fontSize:12,color:D.r}}>• {r.tarih} ({r.sube}): {fmtTL(Math.abs(r.fark))} açık</div>)}</div>}
-    <h4 style={{fontSize:12,fontWeight:700,color:D.t3,marginBottom:8}}>Z-RAPORU GEÇMİŞİ</h4>
-    {zr.length===0?<p style={{fontSize:12,color:D.t3}}>Henüz Z-Raporu yüklenmedi.</p>:zr.map((r,i)=><div key={i} className="fu" style={{background:D.w,borderRadius:12,padding:"10px 14px",boxShadow:D.s1,marginBottom:8,animationDelay:i*.05+"s"}}><div style={{display:"flex",justifyContent:"space-between"}}><span style={{fontWeight:600,fontSize:13}}>{r.tarih} — {r.sube}</span><span style={{fontWeight:700,fontSize:13,color:D.blue}}>{fmtTL(r.ciro)}</span></div><div style={{fontSize:11,color:D.t3}}>Nakit: {fmtTL(r.nakit)} | Kart: {fmtTL(r.kart)} | KDV: {fmtTL((r.kdv1||0)+(r.kdv10||0)+(r.kdv20||0))}{r.fark!==0&&<span style={{color:r.fark<0?D.r:D.g,fontWeight:700}}> | Fark: {fmtTL(r.fark)}</span>}</div></div>)}
+      <div className="fu" style={{background:D.w,borderRadius:14,padding:"12px 14px",boxShadow:D.s1,marginBottom:10}}>
+        <div style={{fontSize:12,fontWeight:700,marginBottom:8}}>KDV Detay</div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}><span style={{color:D.t3}}>Z-Raporu Satış KDV (Çıkış)</span><span style={{fontWeight:700,color:D.r}}>+{fmtTL(hesaplananKDV)}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}><span style={{color:D.t3}}>Alış Fatura KDV (Giriş)</span><span style={{fontWeight:700,color:D.g}}>-{fmtTL(alisFaturaKDV)}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:13,fontWeight:800,borderTop:`1px solid ${D.blueBd}`,paddingTop:6,color:odenecekKDV>0?D.r:D.g}}><span>{odenecekKDV>0?"Devlete Ödenecek KDV":"Devreden KDV (Sonraki Ay)"}</span><span>{fmtTL(odenecekKDV||devredenKDV)}</span></div>
+      </div>
+      <p style={{fontSize:10,color:D.t3}}>* Beyanname: Her ayın 26'sına kadar. Alış faturaları sisteme girildikçe İndirilecek KDV güncellenir.</p>
+    </div>}
+
+    {vTab==="stopaj"&&<div>
+      <div className="fu" style={{background:D.w,borderRadius:16,padding:16,boxShadow:D.s1,marginBottom:12}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:10}}>🏠 Kira Stopajı (%20 Gelir Vergisi Kesintisi)</div>
+        {kiralar.map((k,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:`1px solid ${D.blueGh}`,fontSize:13}}>
+          <div><div style={{fontWeight:600}}>{k.yer}</div><div style={{fontSize:11,color:D.t3}}>Brüt Kira: {fmtTL(k.brut)}</div></div>
+          <div style={{textAlign:"right"}}><div style={{fontWeight:700,color:D.r}}>Stopaj: {fmtTL(Math.round(k.brut*0.20))}</div><div style={{fontSize:10,color:D.t3}}>Net: {fmtTL(Math.round(k.brut*0.80))}</div></div>
+        </div>)}
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:800,paddingTop:10,color:D.r}}><span>Aylık Toplam Stopaj</span><span>{fmtTL(topStopaj)}</span></div>
+      </div>
+      <div className="fu" style={{background:D.rS,borderRadius:12,padding:"10px 12px"}}><div style={{fontSize:12,fontWeight:700,color:D.r}}>⏰ Muhtasar Beyanname: Her ayın 26'sı</div><div style={{fontSize:11,color:D.t2}}>Stopaj tutarını bu tarihe kadar beyan et ve öde.</div></div>
+    </div>}
+
+    {vTab==="gelir"&&<div>
+      <div className="fu" style={{background:`linear-gradient(135deg,${isLtd?"#1B6B3A":"#8B4513"},${isLtd?"#0F4025":"#5C2E0E"})`,borderRadius:16,padding:16,marginBottom:12,color:D.w}}>
+        <div style={{fontSize:11,opacity:.6}}>{isLtd?"Kurumlar Vergisi (Sabit %25)":"Gelir Vergisi (Artan Oranlı)"}</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginTop:10}}>
+          <div><div style={{fontSize:9,opacity:.5}}>Tahmini Yıllık Kâr</div><div style={{fontSize:18,fontWeight:800,fontFamily:D.fd}}>{fmtTL(Math.round(yillikKar))}</div></div>
+          <div><div style={{fontSize:9,opacity:.5}}>Vergi Oranı</div><div style={{fontSize:18,fontWeight:800,fontFamily:D.fd}}>%{vergiOrani}</div></div>
+        </div>
+      </div>
+      <div className="fu" style={{background:D.w,borderRadius:14,padding:"12px 14px",boxShadow:D.s1,marginBottom:10}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:4}}><span>Brüt Vergi</span><span style={{fontWeight:700}}>{fmtTL(vergiTutar)}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:4,color:D.g}}><span>Vergi Kalkanı (Faiz Gideri)</span><span style={{fontWeight:700}}>-{fmtTL(Math.round(vergiKalkani*(isLtd?0.25:vergiOrani/100)))}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:800,borderTop:`1px solid ${D.blueBd}`,paddingTop:6,color:D.r}}><span>Tahmini Net Vergi</span><span>{fmtTL(netVergi)}</span></div>
+      </div>
+      {!isLtd&&yillikKar>870000&&<div className="fu" style={{background:D.rS,borderRadius:12,padding:"10px 12px",animation:"glow 2s ease infinite"}}><div style={{fontSize:12,fontWeight:700,color:D.r}}>⚠️ %{vergiOrani} dilimdesin!</div><div style={{fontSize:11,color:D.t2}}>{yillikKar>3000000?"Üst dilim! Şirketleşme düşünülmeli.":"Kâr arttıkça dilim yükseliyor. Gider artırarak vergi kalkanı kullan."}</div></div>}
+    </div>}
+
+    {vTab==="gecici"&&<div>
+      <div className="fu" style={{background:D.w,borderRadius:16,padding:16,boxShadow:D.s1,marginBottom:12}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:10}}>📅 Geçici Vergi Takvimi (3 Ayda Bir)</div>
+        {geciciTarihler.map((t,i)=>{const isPast=i<1;return<div key={i} style={{display:"flex",justifyContent:"space-between",padding:"10px 0",borderBottom:`1px solid ${D.blueGh}`,alignItems:"center"}}>
+          <div><div style={{fontWeight:600,fontSize:13}}>{i+1}. Dönem — {t}</div><div style={{fontSize:11,color:D.t3}}>Yıllık kârın %25'inin 1/4'ü</div></div>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <span style={{fontWeight:700,fontSize:14,color:isPast?D.g:D.t}}>{fmtTL(geciciVergi)}</span>
+            {isPast&&<span style={{color:D.g,fontSize:10,fontWeight:700}}>✓</span>}
+          </div>
+        </div>;})}
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:800,paddingTop:10}}><span>Yıllık Toplam</span><span style={{color:D.blue,fontFamily:D.fd}}>{fmtTL(geciciVergi*4)}</span></div>
+      </div>
+    </div>}
+
+    {vTab==="damga"&&<div>
+      <div className="fu" style={{background:D.w,borderRadius:16,padding:16,boxShadow:D.s1,marginBottom:12}}>
+        <div style={{fontSize:13,fontWeight:700,marginBottom:10}}>📌 Damga Vergisi (Sabit Giderler)</div>
+        <p style={{fontSize:11,color:D.t3,marginBottom:10}}>Gelir olmasa bile her beyanname dönemi damga vergisi ödenir.</p>
+        {damgalar.map((dm,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:`1px solid ${D.blueGh}`,fontSize:13}}>
+          <span>{dm.ad}</span><span style={{fontWeight:700}}>{fmtTL(dm.tutar)}</span>
+        </div>)}
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:14,fontWeight:800,paddingTop:10,color:D.r}}><span>Aylık Toplam Damga</span><span>{fmtTL(Math.round(topDamga))}</span></div>
+      </div>
+    </div>}
+
+    {vTab==="kalkan"&&<div>
+      <div className="fu" style={{background:"linear-gradient(135deg,#B8860B,#8B6914)",borderRadius:16,padding:16,marginBottom:12,color:D.w}}>
+        <div style={{fontSize:11,opacity:.6}}>VERGİ KALKANI — Maliyet Düşürme Raporu</div>
+        <div style={{fontSize:28,fontWeight:800,fontFamily:D.fd,marginTop:8}}>{fmtTL(Math.round(vergiKalkani*(isLtd?0.25:vergiOrani/100)))}</div>
+        <div style={{fontSize:11,opacity:.6,marginTop:2}}>Faiz giderlerinden tasarruf edilen vergi</div>
+      </div>
+      <div className="fu" style={{background:D.w,borderRadius:14,padding:"12px 14px",boxShadow:D.s1,marginBottom:10}}>
+        <div style={{fontSize:12,fontWeight:700,marginBottom:8}}>Detay</div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}><span style={{color:D.t3}}>Ticari Kredi Faiz Ödenen</span><span style={{fontWeight:700}}>{fmtTL(faizGideri)}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}><span style={{color:D.t3}}>Kalan Faiz (ileride gider yazılacak)</span><span style={{fontWeight:700}}>{fmtTL(toplamFaizKalan)}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}><span style={{color:D.t3}}>Vergi Oranı</span><span style={{fontWeight:700}}>%{vergiOrani}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:13,fontWeight:800,borderTop:`1px solid ${D.blueBd}`,paddingTop:6,color:D.g}}><span>Şu Ana Kadar Tasarruf</span><span>{fmtTL(Math.round(faizGideri*(isLtd?0.25:vergiOrani/100)))}</span></div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:D.o,marginTop:4}}><span>Potansiyel Toplam Tasarruf</span><span style={{fontWeight:700}}>{fmtTL(Math.round((faizGideri+toplamFaizKalan)*(isLtd?0.25:vergiOrani/100)))}</span></div>
+      </div>
+      <p style={{fontSize:10,color:D.t3}}>* Ticari kredilerdeki faiz giderleri, {isLtd?"Kurumlar":"Gelir"} vergisi matrahından düşülerek vergi tasarrufu sağlar.</p>
+    </div>}
   </div>;
 }
 
