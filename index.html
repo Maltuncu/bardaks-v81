@@ -393,39 +393,52 @@ function Finance({goHome,onNav,data,setData}){
     if(sub==="sahis")return d.sahis.map(b=><Row key={b.id} id={b.id} key2="sahis" main={b.kisi+" ("+b.tip+")"} detail="" value={b.tutar}/>);
     if(sub==="altin")return d.altin.map(a=><Row key={a.id} id={a.id} key2="altin" main={a.kisi} detail={a.gram+"g × ₺"+fmt(gp)} value={a.gram*gp}/>);
     if(sub==="cekler"){
+      const[cekArama,setCekArama]=useState("");const[cekFiltre,setCekFiltre]=useState("tum");
       const cekler=d.cekler||[];const bankalar=[...new Set(cekler.map(c=>c.banka||"Diğer"))];
-      const verilen=cekler.filter(c=>c.tip==="verilen");const alinan=cekler.filter(c=>c.tip==="alınan");
+      let filtered=cekler;
+      if(cekArama)filtered=filtered.filter(c=>(c.banka||"").toLowerCase().includes(cekArama.toLowerCase())||(c.no||"").toLowerCase().includes(cekArama.toLowerCase())||(c.kime||"").toLowerCase().includes(cekArama.toLowerCase()));
+      if(cekFiltre!=="tum")filtered=filtered.filter(c=>(c.banka||"Diğer")===cekFiltre);
+      const verilen=filtered.filter(c=>c.tip==="verilen");const alinan=filtered.filter(c=>c.tip==="alınan");
       const topVerilen=verilen.reduce((s,c)=>s+c.tutar,0);const topAlinan=alinan.reduce((s,c)=>s+c.tutar,0);
-      const tahsilCek=(id)=>{update("cekler",cekler.map(c=>c.id===id?{...c,tahsil:true}:c));};
-      return<div>
-        {/* Özet */}
-        <div style={{display:"flex",gap:6,marginBottom:10}}>
-          <div className="fu" style={{flex:1,background:D.w,borderRadius:12,padding:"10px 12px",boxShadow:D.s1,borderLeft:`3px solid ${D.r}`}}><div style={{fontSize:9,color:D.t3}}>Verilen Çekler</div><div style={{fontSize:15,fontWeight:800,color:D.r,fontFamily:D.fd}}>{fmtTL(topVerilen)}</div><div style={{fontSize:9,color:D.t3}}>{verilen.length} adet</div></div>
-          <div className="fu" style={{flex:1,background:D.w,borderRadius:12,padding:"10px 12px",boxShadow:D.s1,borderLeft:`3px solid ${D.g}`}}><div style={{fontSize:9,color:D.t3}}>Alınan Çekler</div><div style={{fontSize:15,fontWeight:800,color:D.g,fontFamily:D.fd}}>{fmtTL(topAlinan)}</div><div style={{fontSize:9,color:D.t3}}>{alinan.length} adet</div></div>
-        </div>
-        {/* Banka Filtreleri */}
-        {bankalar.length>0&&<div style={{display:"flex",gap:4,marginBottom:10,flexWrap:"wrap"}}>{bankalar.map(b=>{const cnt=cekler.filter(c=>(c.banka||"Diğer")===b).length;const tot=cekler.filter(c=>(c.banka||"Diğer")===b).reduce((s,c)=>s+c.tutar,0);return<div key={b} className="fu" style={{background:D.w,borderRadius:10,padding:"6px 10px",boxShadow:D.s1,fontSize:10}}><div style={{fontWeight:700,color:D.blue}}>{b}</div><div style={{color:D.t3}}>{cnt} çek — {fmtTL(tot)}</div></div>;})}</div>}
-        {/* Çek Kartları */}
-        {cekler.map((c,i)=>{const gun=daysTil(c.vade);const isWarn=gun>=0&&gun<=5;
-        return<div key={c.id} className="fu" style={{background:c.tahsil?D.gS:isWarn?D.rS:D.w,borderRadius:14,padding:"12px 14px",boxShadow:D.s1,marginBottom:8,border:`1.5px solid ${c.tahsil?"rgba(45,168,84,0.3)":isWarn?"rgba(220,62,53,0.2)":D.blueBd}`,animationDelay:i*.04+"s"}}>
+      const tahsilCek=(id)=>{update("cekler",(d.cekler||[]).map(c=>c.id===id?{...c,tahsil:true}:c));};
+      const CekKart=({c,i})=>{const gun=daysTil(c.vade);const isWarn=gun>=0&&gun<=5;
+        return<div className="fu" style={{background:c.tahsil?D.gS:isWarn?D.rS:D.w,borderRadius:14,padding:"11px 13px",boxShadow:D.s1,marginBottom:7,border:`1.5px solid ${c.tahsil?"rgba(45,168,84,0.3)":isWarn?"rgba(220,62,53,0.2)":D.blueBd}`,animationDelay:i*.03+"s"}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div style={{flex:1}}>
-              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
+              <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:2}}>
                 <span style={{fontSize:9,padding:"2px 6px",borderRadius:4,fontWeight:700,background:c.tip==="verilen"?"rgba(220,62,53,0.1)":"rgba(45,168,84,0.1)",color:c.tip==="verilen"?D.r:D.g}}>{c.tip==="verilen"?"VERİLEN":"ALINAN"}</span>
                 {c.banka&&<span style={{fontSize:10,fontWeight:700,color:D.blue}}>{c.banka}</span>}
                 {c.tahsil&&<span style={{fontSize:9,color:D.g,fontWeight:700}}>✓ Tahsil</span>}
-                {isWarn&&!c.tahsil&&<span style={{width:7,height:7,borderRadius:4,background:D.r,animation:"pulse 1.5s ease infinite"}}/>}
+                {isWarn&&!c.tahsil&&<span style={{width:6,height:6,borderRadius:3,background:D.r,animation:"pulse 1.5s ease infinite"}}/>}
               </div>
-              <div style={{fontWeight:600,fontSize:13}}>{c.no} → {c.kime}</div>
-              <div style={{fontSize:11,color:D.t3}}>{c.sube?c.sube+" | ":""}Vade: {c.vade}{gun>=0?" ("+gun+" gün)":""}</div>
+              <div style={{fontWeight:600,fontSize:12}}>{c.no} → {c.kime}</div>
+              <div style={{fontSize:10,color:D.t3}}>{c.sube?c.sube+" | ":""}Vade: {c.vade}{gun>=0?" ("+gun+"g)":""}</div>
             </div>
-            <div style={{display:"flex",alignItems:"center",gap:5}}>
-              <span style={{fontWeight:800,fontSize:14,color:c.tip==="verilen"?D.r:D.g,fontFamily:D.fd}}>{fmtTL(c.tutar)}</span>
-              {!c.tahsil&&c.tip==="alınan"&&<button onClick={()=>tahsilCek(c.id)} className="tap" style={{padding:"3px 7px",borderRadius:6,border:"none",background:D.gS,cursor:"pointer",color:D.g,fontSize:9,fontWeight:700}}>Tahsil</button>}
-              <button onClick={()=>del("cekler",c.id)} className="tap" style={{padding:3,borderRadius:6,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={12} c={D.r}/></button>
+            <div style={{display:"flex",alignItems:"center",gap:4}}>
+              <span style={{fontWeight:800,fontSize:13,color:c.tip==="verilen"?D.r:D.g,fontFamily:D.fd}}>{fmtTL(c.tutar)}</span>
+              {!c.tahsil&&c.tip==="alınan"&&<button onClick={()=>tahsilCek(c.id)} className="tap" style={{padding:"2px 6px",borderRadius:5,border:"none",background:D.gS,cursor:"pointer",color:D.g,fontSize:9,fontWeight:700}}>Tahsil</button>}
+              <button onClick={()=>del("cekler",c.id)} className="tap" style={{padding:2,borderRadius:5,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={12} c={D.r}/></button>
             </div>
           </div>
-        </div>;})}
+        </div>;};
+      return<div>
+        {/* Özet Kartları */}
+        <div style={{display:"flex",gap:6,marginBottom:8}}>
+          <div className="fu" style={{flex:1,background:D.w,borderRadius:12,padding:"10px 12px",boxShadow:D.s1,borderLeft:`3px solid ${D.r}`}}><div style={{fontSize:9,color:D.t3}}>Verilen (Borç)</div><div style={{fontSize:15,fontWeight:800,color:D.r,fontFamily:D.fd}}>{fmtTL(topVerilen)}</div><div style={{fontSize:9,color:D.t3}}>{verilen.length} adet</div></div>
+          <div className="fu" style={{flex:1,background:D.w,borderRadius:12,padding:"10px 12px",boxShadow:D.s1,borderLeft:`3px solid ${D.g}`}}><div style={{fontSize:9,color:D.t3}}>Alınan (Tahsilat)</div><div style={{fontSize:15,fontWeight:800,color:D.g,fontFamily:D.fd}}>{fmtTL(topAlinan)}</div><div style={{fontSize:9,color:D.t3}}>{alinan.length} adet</div></div>
+        </div>
+        {/* Arama */}
+        <input value={cekArama} onChange={e=>setCekArama(e.target.value)} placeholder="Banka, çek no veya isim ara..." style={{marginBottom:8,fontSize:12}}/>
+        {/* Banka Filtreleri */}
+        <div style={{display:"flex",gap:3,marginBottom:10,flexWrap:"wrap"}}>
+          <button onClick={()=>setCekFiltre("tum")} className="tap" style={{padding:"4px 8px",borderRadius:8,border:"none",cursor:"pointer",background:cekFiltre==="tum"?D.blue:D.w,color:cekFiltre==="tum"?D.w:D.t2,fontSize:9,fontWeight:700,boxShadow:D.s1}}>Tümü</button>
+          {bankalar.map(b=><button key={b} onClick={()=>setCekFiltre(b===cekFiltre?"tum":b)} className="tap" style={{padding:"4px 8px",borderRadius:8,border:"none",cursor:"pointer",background:cekFiltre===b?D.blue:D.w,color:cekFiltre===b?D.w:D.t2,fontSize:9,fontWeight:700,boxShadow:D.s1}}>{b} ({cekler.filter(c=>(c.banka||"Diğer")===b).length})</button>)}
+        </div>
+        {/* Verilen Evraklar */}
+        {verilen.length>0&&<><h4 style={{fontSize:11,fontWeight:700,color:D.r,marginBottom:6}}>📤 VERİLEN EVRAKLAR (Borç)</h4>{verilen.map((c,i)=><CekKart key={c.id} c={c} i={i}/>)}</>}
+        {/* Alınan Evraklar */}
+        {alinan.length>0&&<><h4 style={{fontSize:11,fontWeight:700,color:D.g,margin:"10px 0 6px"}}>📥 ALINAN EVRAKLAR (Tahsilat)</h4>{alinan.map((c,i)=><CekKart key={c.id} c={c} i={i}/>)}</>}
+        {filtered.length===0&&<p style={{textAlign:"center",color:D.t3,fontSize:12,padding:20}}>Sonuç bulunamadı.</p>}
       </div>;
     }
   };
