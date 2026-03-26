@@ -60,7 +60,7 @@ function Modal({open,onClose,title,children}){if(!open)return null;return<div st
 const SK="bardaks_v36";
 const ISB_AMORT=[{no:1,tarih:"29.01.2026",anapara:29304.94,faiz:19125.00,fon:0,vergi:956.25,taksit:49386.19,kalan:420695.06},{no:2,tarih:"02.03.2026",anapara:29361.10,faiz:19071.51,fon:0,vergi:953.58,taksit:49386.19,kalan:391333.96},{no:3,tarih:"30.03.2026",anapara:33087.13,faiz:15522.91,fon:0,vergi:776.15,taksit:49386.19,kalan:358246.83},{no:4,tarih:"29.04.2026",anapara:33399.43,faiz:15225.49,fon:0,vergi:761.27,taksit:49386.19,kalan:324847.40},{no:5,tarih:"01.06.2026",anapara:33440.24,faiz:15186.62,fon:0,vergi:759.33,taksit:49386.19,kalan:291407.16},{no:6,tarih:"29.06.2026",anapara:37249.08,faiz:11559.15,fon:0,vergi:577.96,taksit:49386.19,kalan:254158.08},{no:7,tarih:"29.07.2026",anapara:38044.38,faiz:10801.72,fon:0,vergi:540.09,taksit:49386.19,kalan:216113.70},{no:8,tarih:"31.08.2026",anapara:38777.70,faiz:10103.32,fon:0,vergi:505.17,taksit:49386.19,kalan:177336.00},{no:9,tarih:"29.09.2026",anapara:41736.36,faiz:7285.55,fon:0,vergi:364.28,taksit:49386.19,kalan:135599.64},{no:10,tarih:"30.10.2026",anapara:43133.36,faiz:5955.08,fon:0,vergi:297.75,taksit:49386.19,kalan:92466.28},{no:11,tarih:"30.11.2026",anapara:45122.34,faiz:4060.81,fon:0,vergi:203.04,taksit:49386.19,kalan:47343.94},{no:12,tarih:"29.12.2026",anapara:47343.94,faiz:1945.05,fon:0,vergi:97.25,taksit:49386.24,kalan:0}];
 const VAR_AMORT=[{no:1,tarih:"26.01.2026",anapara:69228.65,faiz:15902.38,bsmv:795.12,taksit:85926.15,kalan:849771.35},{no:2,tarih:"26.02.2026",anapara:70486.49,faiz:14704.44,bsmv:735.22,taksit:85926.15,kalan:779284.86},{no:3,tarih:"26.03.2026",anapara:71767.16,faiz:13484.75,bsmv:674.24,taksit:85926.15,kalan:707517.70},{no:4,tarih:"27.04.2026",anapara:73071.12,faiz:12242.89,bsmv:612.14,taksit:85926.15,kalan:634446.58},{no:5,tarih:"26.05.2026",anapara:74398.77,faiz:10978.46,bsmv:548.92,taksit:85926.15,kalan:560047.81},{no:6,tarih:"26.06.2026",anapara:75750.53,faiz:9691.07,bsmv:484.55,taksit:85926.15,kalan:484297.28},{no:7,tarih:"27.07.2026",anapara:77126.86,faiz:8380.28,bsmv:419.01,taksit:85926.15,kalan:407170.42},{no:8,tarih:"26.08.2026",anapara:78528.19,faiz:7045.68,bsmv:352.28,taksit:85926.15,kalan:328642.23},{no:9,tarih:"28.09.2026",anapara:79954.98,faiz:5686.83,bsmv:284.34,taksit:85926.15,kalan:248687.25},{no:10,tarih:"26.10.2026",anapara:81407.71,faiz:4303.28,bsmv:215.16,taksit:85926.15,kalan:167279.54},{no:11,tarih:"26.11.2026",anapara:82886.81,faiz:2894.61,bsmv:144.73,taksit:85926.15,kalan:84392.73},{no:12,tarih:"28.12.2026",anapara:84392.73,faiz:1460.33,bsmv:73.02,taksit:85926.08,kalan:0}];
-const defData={ltd:{krediler:[{id:1,bank:"Ziraat",monthly:11200,remaining:108,total:108,nextDate:"2026-04-02",ticari:true,faiz:3200,anapara:8000,paidMonths:[]},{id:2,bank:"İş Bankası (İşletme)",monthly:49386,remaining:12,total:12,nextDate:"2026-01-29",ticari:true,faiz:19125,anapara:29305,hesapNo:"7502-632803",toplamKredi:450000,ampirik:true,paidMonths:[]},{id:3,bank:"Vakıfbank",monthly:8500,remaining:84,total:84,nextDate:"2026-04-05",ticari:true,faiz:2800,anapara:5700,paidMonths:[]},{id:4,bank:"Halkbank",monthly:7600,remaining:72,total:72,nextDate:"2026-04-15",ticari:false,faiz:0,anapara:7600,paidMonths:[]},{id:5,bank:"Garanti",monthly:6900,remaining:60,total:60,nextDate:"2026-04-08",ticari:false,faiz:0,anapara:6900,paidMonths:[]}],kartlar:[{id:1,name:"Yapı Kredi",limit:200000,used:142000,odeme:"2026-04-05"},{id:2,name:"Garanti",limit:150000,used:98000,odeme:"2026-04-10"},{id:3,name:"İş Bankası",limit:120000,used:87000,odeme:"2026-04-15"}],sahis:[{id:1,kisi:"Tedarikçi A",tutar:68000,tip:"senetli"},{id:2,kisi:"Ekipman",tutar:45000,tip:"senetli"}],altin:[],cekler:[{id:1,no:"ÇK-001",tutar:35000,vade:"2026-04-12",kime:"Tedarikçi A",banka:"İş Bankası",sube:"Trabzon Meydan",tip:"verilen",tahsil:false},{id:2,no:"ÇK-002",tutar:28000,vade:"2026-04-20",kime:"Fırın Malzeme",banka:"Garanti",sube:"Trabzon Merkez",tip:"verilen",tahsil:false},{id:20,no:"ÇK-A01",tutar:18500,vade:"2026-04-15",kime:"Müşteri X",banka:"Vakıfbank",sube:"Trabzon",tip:"alınan",tahsil:false}],kiralar:[{id:1,yer:"Meydan Dükkan",net:45000,gun:1},{id:2,yer:"İmalathane",net:25000,gun:1}],personel:[{id:1,ad:"Cihan",sube:"Meydan",net:22000,sgk:0,prim:3000,yemekAy:8580,calGun:26},{id:2,ad:"Ayşe",sube:"Meydan",net:19000,sgk:0,prim:2000,yemekAy:8580,calGun:26},{id:3,ad:"Gülüzar",sube:"İmalathane",net:20000,sgk:0,prim:2500,yemekAy:8580,calGun:26},{id:4,ad:"Fatma",sube:"İmalathane",net:18000,sgk:0,prim:0,yemekAy:8580,calGun:26}],faturalar:[{id:1,tip:"Elektrik (Aksa Çoruh)",tutar:24636,kdvOran:20,sube:"Meydan",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-11",faturaNo:"CPS2026001643296",tuketiciNo:"1029538",tuketim:"4.628 KWH",not:"Şubat 2026 dönemi"},{id:2,tip:"İnternet (Türk Telekom)",tutar:914,kdvOran:20,sube:"Meydan",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-16",faturaNo:"E162006T12259536",hesapNo:"7047566520",not:"VDSL 100Mbps - Şubat 2026"},{id:3,tip:"Su (TİSKİ)",tutar:2477,kdvOran:8,sube:"Meydan",tarih:"2026-02-25",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-12",faturaNo:"170190663",not:"17 ton tüketim - Şubat 2026"},{id:101,tip:"Doğalgaz (Aksa)",tutar:10200,kdvOran:20,sube:"Meydan",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-15",not:"Meydan dükkan ısınma"},{id:102,tip:"Doğalgaz (Aksa)",tutar:6240,kdvOran:20,sube:"İmalathane",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-15",not:"İmalathane ısınma+üretim"}],zRaporlari:[]},sahis:{krediler:[{id:6,bank:"QNB",monthly:8200,remaining:84,total:84,nextDate:"2026-04-03",ticari:false,faiz:0,anapara:8200,paidMonths:[]},{id:7,bank:"Denizbank",monthly:7100,remaining:72,total:72,nextDate:"2026-04-12",ticari:false,faiz:0,anapara:7100,paidMonths:[]},{id:8,bank:"TEB",monthly:6400,remaining:60,total:60,nextDate:"2026-04-07",ticari:false,faiz:0,anapara:6400,paidMonths:[]},{id:9,bank:"Akbank",monthly:5800,remaining:48,total:48,nextDate:"2026-04-18",ticari:false,faiz:0,anapara:5800,paidMonths:[]},{id:10,bank:"Şekerbank",monthly:4500,remaining:36,total:36,nextDate:"2026-04-20",ticari:false,faiz:0,anapara:4500,paidMonths:[]},{id:11,bank:"Vardarlar (Taşıt)",monthly:85926,remaining:12,total:12,nextDate:"2026-01-26",ticari:false,faiz:15902,anapara:69228,bsmv:795,sozlesmeNo:"20252048154-1",toplamKredi:919000,ampirik:true,paidMonths:[]}],kartlar:[{id:4,name:"Akbank",limit:100000,used:73000,odeme:"2026-04-18"},{id:5,name:"Denizbank",limit:80000,used:54000,odeme:"2026-04-25"}],sahis:[{id:3,kisi:"Ahmet Bey",tutar:52000,tip:"senetli"},{id:4,kisi:"Mustafa",tutar:35000,tip:"sözlü"},{id:5,kisi:"Emlakçı",tutar:28000,tip:"sözlü"}],altin:[{id:1,kisi:"Mehmet Abi",gram:150},{id:2,kisi:"Halil Usta",gram:80},{id:3,kisi:"Dayı Ahmet",gram:45},{id:4,kisi:"Osman Usta",gram:20}],cekler:[{id:3,no:"ÇK-003",tutar:22000,vade:"2026-04-25",kime:"Emlakçı",banka:"Akbank",sube:"Trabzon",tip:"verilen",tahsil:false},{id:21,no:"ÇK-A02",tutar:12000,vade:"2026-05-01",kime:"Cafe Müşteri",banka:"Denizbank",sube:"KTÜ",tip:"alınan",tahsil:false}],kiralar:[{id:3,yer:"KTÜ Dükkan",net:22000,gun:1},{id:4,yer:"Samsun Dükkan",net:18000,gun:1}],personel:[{id:5,ad:"Arif",sube:"KTÜ",net:20000,sgk:0,prim:2500,yemekAy:9000,calGun:26},{id:6,ad:"Mehmet",sube:"KTÜ",net:18000,sgk:0,prim:0,yemekAy:8580,calGun:26},{id:7,ad:"Emine",sube:"Samsun",net:19000,sgk:0,prim:2000,yemekAy:8580,calGun:26}],faturalar:[{id:4,tip:"Su (TİSKİ)",tutar:2477,kdvOran:8,sube:"KTÜ",tarih:"2026-02-25",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-12",faturaNo:"170190663",aboneNo:"158824",not:"Muhammed Altuncu - Üniversite Mah. Farabi Cad. 42/12/1 - 17 ton"},{id:5,tip:"İnternet",tutar:1800,kdvOran:20,sube:"KTÜ",tarih:"2026-03-10",periyod:"aylik",durum:"bekliyor"},{id:103,tip:"Tüp (Mutfak)",tutar:3800,kdvOran:0,sube:"KTÜ",tarih:"2026-03-01",periyod:"aylik",durum:"bekliyor",not:"50 kg tüp × 2 adet"},{id:104,tip:"Tüp (Mutfak)",tutar:3200,kdvOran:0,sube:"Samsun",tarih:"2026-03-01",periyod:"aylik",durum:"bekliyor",not:"50 kg tüp × 1 adet + 12 kg"},{id:105,tip:"Elektrik",tutar:5760,kdvOran:20,sube:"KTÜ",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",not:"KTÜ dükkan"},{id:106,tip:"Elektrik",tutar:4200,kdvOran:20,sube:"Samsun",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",not:"Samsun dükkan"}],zRaporlari:[]}};
+const defData={ltd:{krediler:[{id:1,bank:"Ziraat",monthly:11200,remaining:108,total:108,nextDate:"2026-04-02",ticari:true,faiz:3200,anapara:8000,paidMonths:[]},{id:2,bank:"İş Bankası (İşletme)",monthly:49386,remaining:12,total:12,nextDate:"2026-01-29",ticari:true,faiz:19125,anapara:29305,hesapNo:"7502-632803",toplamKredi:450000,ampirik:true,paidMonths:[]},{id:3,bank:"Vakıfbank",monthly:8500,remaining:84,total:84,nextDate:"2026-04-05",ticari:true,faiz:2800,anapara:5700,paidMonths:[]},{id:4,bank:"Halkbank",monthly:7600,remaining:72,total:72,nextDate:"2026-04-15",ticari:false,faiz:0,anapara:7600,paidMonths:[]},{id:5,bank:"Garanti",monthly:6900,remaining:60,total:60,nextDate:"2026-04-08",ticari:false,faiz:0,anapara:6900,paidMonths:[]}],kartlar:[{id:1,name:"Yapı Kredi",limit:200000,used:142000,odeme:"2026-04-05"},{id:2,name:"Garanti",limit:150000,used:98000,odeme:"2026-04-10"},{id:3,name:"İş Bankası",limit:120000,used:87000,odeme:"2026-04-15"}],sahis:[{id:1,kisi:"Tedarikçi A",tutar:68000,tip:"senetli"},{id:2,kisi:"Ekipman",tutar:45000,tip:"senetli"}],altin:[],cekler:[{id:1,no:"ÇK-001",tutar:35000,vade:"2026-04-12",kime:"Tedarikçi A",banka:"İş Bankası",sube:"Trabzon Meydan",tip:"verilen",tahsil:false},{id:2,no:"ÇK-002",tutar:28000,vade:"2026-04-20",kime:"Fırın Malzeme",banka:"Garanti",sube:"Trabzon Merkez",tip:"verilen",tahsil:false},{id:20,no:"ÇK-A01",tutar:18500,vade:"2026-04-15",kime:"Müşteri X",banka:"Vakıfbank",sube:"Trabzon",tip:"alınan",tahsil:false}],kiralar:[{id:1,yer:"Meydan Dükkan",net:45000,stopajVar:true,periyod:"aylik",sube:"Meydan"},{id:2,yer:"İmalathane",net:25000,stopajVar:true,periyod:"aylik",sube:"İmalathane"}],personel:[{id:1,ad:"Cihan",sube:"Meydan",net:22000,sgk:0,prim:3000,yemekAy:8580,calGun:26},{id:2,ad:"Ayşe",sube:"Meydan",net:19000,sgk:0,prim:2000,yemekAy:8580,calGun:26},{id:3,ad:"Gülüzar",sube:"İmalathane",net:20000,sgk:0,prim:2500,yemekAy:8580,calGun:26},{id:4,ad:"Fatma",sube:"İmalathane",net:18000,sgk:0,prim:0,yemekAy:8580,calGun:26}],faturalar:[{id:1,tip:"Elektrik (Aksa Çoruh)",tutar:24636,kdvOran:20,sube:"Meydan",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-11",faturaNo:"CPS2026001643296",tuketiciNo:"1029538",tuketim:"4.628 KWH",not:"Şubat 2026 dönemi"},{id:2,tip:"İnternet (Türk Telekom)",tutar:914,kdvOran:20,sube:"Meydan",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-16",faturaNo:"E162006T12259536",hesapNo:"7047566520",not:"VDSL 100Mbps - Şubat 2026"},{id:3,tip:"Su (TİSKİ)",tutar:2477,kdvOran:8,sube:"Meydan",tarih:"2026-02-25",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-12",faturaNo:"170190663",not:"17 ton tüketim - Şubat 2026"},{id:101,tip:"Doğalgaz (Aksa)",tutar:10200,kdvOran:20,sube:"Meydan",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-15",not:"Meydan dükkan ısınma"},{id:102,tip:"Doğalgaz (Aksa)",tutar:6240,kdvOran:20,sube:"İmalathane",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-15",not:"İmalathane ısınma+üretim"}],zRaporlari:[]},sahis:{krediler:[{id:6,bank:"QNB",monthly:8200,remaining:84,total:84,nextDate:"2026-04-03",ticari:false,faiz:0,anapara:8200,paidMonths:[]},{id:7,bank:"Denizbank",monthly:7100,remaining:72,total:72,nextDate:"2026-04-12",ticari:false,faiz:0,anapara:7100,paidMonths:[]},{id:8,bank:"TEB",monthly:6400,remaining:60,total:60,nextDate:"2026-04-07",ticari:false,faiz:0,anapara:6400,paidMonths:[]},{id:9,bank:"Akbank",monthly:5800,remaining:48,total:48,nextDate:"2026-04-18",ticari:false,faiz:0,anapara:5800,paidMonths:[]},{id:10,bank:"Şekerbank",monthly:4500,remaining:36,total:36,nextDate:"2026-04-20",ticari:false,faiz:0,anapara:4500,paidMonths:[]},{id:11,bank:"Vardarlar (Taşıt)",monthly:85926,remaining:12,total:12,nextDate:"2026-01-26",ticari:false,faiz:15902,anapara:69228,bsmv:795,sozlesmeNo:"20252048154-1",toplamKredi:919000,ampirik:true,paidMonths:[]}],kartlar:[{id:4,name:"Akbank",limit:100000,used:73000,odeme:"2026-04-18"},{id:5,name:"Denizbank",limit:80000,used:54000,odeme:"2026-04-25"}],sahis:[{id:3,kisi:"Ahmet Bey",tutar:52000,tip:"senetli"},{id:4,kisi:"Mustafa",tutar:35000,tip:"sözlü"},{id:5,kisi:"Emlakçı",tutar:28000,tip:"sözlü"}],altin:[{id:1,kisi:"Mehmet Abi",gram:150},{id:2,kisi:"Halil Usta",gram:80},{id:3,kisi:"Dayı Ahmet",gram:45},{id:4,kisi:"Osman Usta",gram:20}],cekler:[{id:3,no:"ÇK-003",tutar:22000,vade:"2026-04-25",kime:"Emlakçı",banka:"Akbank",sube:"Trabzon",tip:"verilen",tahsil:false},{id:21,no:"ÇK-A02",tutar:12000,vade:"2026-05-01",kime:"Cafe Müşteri",banka:"Denizbank",sube:"KTÜ",tip:"alınan",tahsil:false}],kiralar:[{id:3,yer:"KTÜ Dükkan",net:22000,gun:1,stopajVar:false,periyod:"aylik",sube:"KTÜ"},{id:4,yer:"Samsun Dükkan",net:18000,gun:1,stopajVar:false,periyod:"aylik",sube:"Samsun"}],personel:[{id:5,ad:"Arif",sube:"KTÜ",net:20000,sgk:0,prim:2500,yemekAy:9000,calGun:26},{id:6,ad:"Mehmet",sube:"KTÜ",net:18000,sgk:0,prim:0,yemekAy:8580,calGun:26},{id:7,ad:"Emine",sube:"Samsun",net:19000,sgk:0,prim:2000,yemekAy:8580,calGun:26}],faturalar:[{id:4,tip:"Su (TİSKİ)",tutar:2477,kdvOran:8,sube:"KTÜ",tarih:"2026-02-25",periyod:"aylik",durum:"bekliyor",sonOdeme:"2026-03-12",faturaNo:"170190663",aboneNo:"158824",not:"Muhammed Altuncu - Üniversite Mah. Farabi Cad. 42/12/1 - 17 ton"},{id:5,tip:"İnternet",tutar:1800,kdvOran:20,sube:"KTÜ",tarih:"2026-03-10",periyod:"aylik",durum:"bekliyor"},{id:103,tip:"Tüp (Mutfak)",tutar:3800,kdvOran:0,sube:"KTÜ",tarih:"2026-03-01",periyod:"aylik",durum:"bekliyor",not:"50 kg tüp × 2 adet"},{id:104,tip:"Tüp (Mutfak)",tutar:3200,kdvOran:0,sube:"Samsun",tarih:"2026-03-01",periyod:"aylik",durum:"bekliyor",not:"50 kg tüp × 1 adet + 12 kg"},{id:105,tip:"Elektrik",tutar:5760,kdvOran:20,sube:"KTÜ",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",not:"KTÜ dükkan"},{id:106,tip:"Elektrik",tutar:4200,kdvOran:20,sube:"Samsun",tarih:"2026-02-28",periyod:"aylik",durum:"bekliyor",not:"Samsun dükkan"}],zRaporlari:[]}};
 function loadD(){try{const s=localStorage.getItem(SK);if(s)return JSON.parse(s);}catch(e){}return JSON.parse(JSON.stringify(defData));}
 function saveD(d){try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){}}
 
@@ -603,18 +603,28 @@ function Finance({goHome,onNav,data,setData}){
     if(sub==="vergi")return<VergiPanel data={data} co={co} gp={gp}/>;
     if(sub==="gider"){
       const kiralar=d.kiralar||[];const faturalar=d.faturalar||[];
-      /* ═══ KİRA HESAPLAMALARI ═══ */
+      /* ═══ KİRA HESAPLAMALARI — Stopaj OPSİYONEL ═══ */
+      /* stopajVar: true/false. true ise Brüt=Net/0.80, Stopaj=%20×Brüt */
       const kiraCalc=kiralar.map(k=>{
-        const net=k.net||0;const brut=Math.round(net/0.80);const stopaj=brut-net;
+        const net=k.net||0;
+        const periyod=k.periyod||"aylik";
+        const stopajVar=k.stopajVar!==false;/* default true, milli emlak gibi yerlerde false */
+        const aylikNet=periyod==="yillik"?Math.round(net/12):net;
+        const aylikBrut=stopajVar?Math.round(aylikNet/0.80):aylikNet;
+        const aylikStopaj=stopajVar?(aylikBrut-aylikNet):0;
+        const yillikNet=periyod==="yillik"?net:net*12;
+        const yillikBrut=stopajVar?Math.round(yillikNet/0.80):yillikNet;
+        const yillikStopaj=stopajVar?(yillikBrut-yillikNet):0;
         const artisLog=k.artisLog||[];
-        /* Artış uyarısı */
         let artisUyari=false;
         if(k.artisTarih){const at=new Date(k.artisTarih);const now=new Date();const fark=Math.ceil((at-now)/864e5);if(fark<=30&&fark>=-7)artisUyari=true;}
-        return{...k,brut,stopaj,artisLog,artisUyari};
+        return{...k,periyod,stopajVar,aylikNet,aylikBrut,aylikStopaj,yillikNet,yillikBrut,yillikStopaj,artisLog,artisUyari};
       });
-      const topKiraNet=kiraCalc.reduce((s,k)=>s+k.net,0);
-      const topStopaj=kiraCalc.reduce((s,k)=>s+k.stopaj,0);
-      const topKiraBrut=kiraCalc.reduce((s,k)=>s+k.brut,0);
+      const topKiraAylikNet=kiraCalc.reduce((s,k)=>s+k.aylikNet,0);
+      const topKiraAylikStopaj=kiraCalc.reduce((s,k)=>s+k.aylikStopaj,0);
+      const topKiraYillikNet=kiraCalc.reduce((s,k)=>s+k.yillikNet,0);
+      const topKiraYillikStopaj=kiraCalc.reduce((s,k)=>s+k.yillikStopaj,0);
+      const topKiraNet=topKiraAylikNet;const topStopaj=topKiraAylikStopaj;
       /* ═══ FATURA HESAPLAMALARI — tutar = KDV DAHİL TOPLAM ═══ */
       /* KDV içinden çıkarma: matrah = toplam / (1 + oran/100), kdv = toplam - matrah */
       const kdvAyir=(toplam,oran)=>{if(!oran)return{matrah:toplam,kdv:0};const matrah=Math.round(toplam/(1+oran/100)*100)/100;const kdv=Math.round((toplam-matrah)*100)/100;return{matrah:Math.round(matrah),kdv:Math.round(kdv)};};
@@ -639,13 +649,12 @@ function Finance({goHome,onNav,data,setData}){
       /* ═══ EKLEME FONKSİYONLARI ═══ */
       const addKira=()=>{
         const yer=prompt("Mülk Adı (Meydan Dükkan, KTÜ Dükkan vb.):");if(!yer)return;
-        const sahip=prompt("Mülk Sahibi:")||"";
-        const iban=prompt("Sahibin IBAN'ı:")||"";
-        const net=Number(prompt("Net Kira (₺):")||0);if(!net)return;
+        const net=Number(prompt("Ödediğin Kira (₺):")||0);if(!net)return;
+        const periyod=confirm("Bu kira AYLIK mı? (İptal=Yıllık)")?"aylik":"yillik";
+        const stopajVar=confirm("Stopaj (%20) hesaplansın mı? (Tamam=Evet, İptal=Hayır — Milli Emlak gibi)");
+        const sahip=prompt("Mülk Sahibi (opsiyonel):")||"";
         const sube=prompt("Şube (Meydan/İmalathane/KTÜ/Samsun):")||"";
-        const kontratTarih=prompt("Kontrat Başlangıç (YYYY-AA-GG):")||"";
-        const artisTarih=prompt("Sonraki Artış Tarihi (YYYY-AA-GG):")||"";
-        update("kiralar",[...kiralar,{id:nid(),yer,sahip,iban,net,gun:1,sube,kontratTarih,artisTarih,artisLog:[]}]);
+        update("kiralar",[...kiralar,{id:nid(),yer,sahip,net,periyod,stopajVar,sube,artisLog:[]}]);
       };
       const delKira=id=>update("kiralar",kiralar.filter(k=>k.id!==id));
       const artisYap=(id)=>{
@@ -696,40 +705,55 @@ function Finance({goHome,onNav,data,setData}){
         {kiraCalc.map((k,i)=><div key={k.id} className="fu" style={{background:D.w,borderRadius:14,padding:"11px 13px",boxShadow:D.s1,marginBottom:8,border:k.artisUyari?`2px solid ${D.o}`:`1px solid ${D.blueBd}`}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:4}}>
             <div>
-              <div style={{fontWeight:700,fontSize:13}}>{k.yer}{k.artisUyari&&<span style={{fontSize:8,background:D.o,color:D.w,padding:"1px 5px",borderRadius:4,marginLeft:4,animation:"pulse 1.5s infinite"}}>ARTIŞ ZAMANI</span>}</div>
-              <div style={{fontSize:9,color:D.t3}}>{k.sahip||"Sahibi girilmemiş"}{k.sube?` • ${k.sube}`:""}</div>
-              {k.iban&&<div style={{fontSize:8,color:D.t3,fontFamily:"monospace"}}>{k.iban}</div>}
+              <div style={{fontWeight:700,fontSize:13}}>{k.yer}
+                <span style={{fontSize:8,background:k.periyod==="yillik"?"rgba(168,85,247,0.12)":D.blueMi,color:k.periyod==="yillik"?"#7c3aed":D.blue,padding:"1px 5px",borderRadius:4,marginLeft:4,fontWeight:600}}>{k.periyod==="yillik"?"YILLIK":"AYLIK"}</span>
+                {k.stopajVar&&<span style={{fontSize:8,background:D.rS,color:D.r,padding:"1px 5px",borderRadius:4,marginLeft:3,fontWeight:600}}>STOPAJLI</span>}
+                {!k.stopajVar&&<span style={{fontSize:8,background:D.gS,color:D.g,padding:"1px 5px",borderRadius:4,marginLeft:3,fontWeight:600}}>STOPAJSIZ</span>}
+                {k.artisUyari&&<span style={{fontSize:8,background:D.o,color:D.w,padding:"1px 5px",borderRadius:4,marginLeft:3,animation:"pulse 1.5s infinite"}}>ARTIŞ</span>}
+              </div>
+              <div style={{fontSize:9,color:D.t3}}>{k.sahip||""}{k.sube?`${k.sahip?" • ":""}${k.sube}`:""}</div>
             </div>
-            <div style={{display:"flex",gap:3}}>
-              {k.artisUyari&&<button onClick={()=>artisYap(k.id)} className="tap" style={{padding:"3px 8px",borderRadius:6,border:"none",background:D.o,color:D.w,fontSize:9,fontWeight:700,cursor:"pointer"}}>Artış Yap</button>}
-              <button onClick={()=>openEdit("kiralar",k.id)} className="tap" style={{padding:3,borderRadius:6,border:"none",background:D.blueMi,cursor:"pointer"}}><svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke={D.blue} strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4z"/></svg></button>
+            <div style={{display:"flex",gap:3,flexWrap:"wrap",justifyContent:"flex-end"}}>
+              <button onClick={()=>{update("kiralar",kiralar.map(x=>x.id===k.id?{...x,stopajVar:!x.stopajVar}:x));}} className="tap" style={{padding:"3px 6px",borderRadius:6,border:"none",background:k.stopajVar?D.rS:D.gS,cursor:"pointer",fontSize:8,fontWeight:600,color:k.stopajVar?D.r:D.g}}>{k.stopajVar?"Stopajı Kaldır":"Stopaj Ekle"}</button>
+              <button onClick={()=>{update("kiralar",kiralar.map(x=>x.id===k.id?{...x,periyod:x.periyod==="yillik"?"aylik":"yillik"}:x));}} className="tap" style={{padding:"3px 6px",borderRadius:6,border:"none",background:D.blueGh,cursor:"pointer",fontSize:8,color:D.blue,fontWeight:600}}>{k.periyod==="yillik"?"→Aylık":"→Yıllık"}</button>
               <button onClick={()=>delKira(k.id)} className="tap" style={{padding:3,borderRadius:6,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={11} c={D.r}/></button>
             </div>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3}}>
-            <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Net Kira</div><div style={{fontSize:12,fontWeight:700}}><InlineEdit value={k.net} type="number" fmt={fmtTL} onSave={v=>{const log=[...(k.artisLog||[])];if(v!==k.net)log.push({tarih:TODAY.toISOString().split("T")[0],eskiNet:k.net,yeniNet:v});update("kiralar",kiralar.map(x=>x.id===k.id?{...x,net:v,artisLog:log}:x));}}/></div></div>
-            <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Brüt Kira</div><div style={{fontSize:12,fontWeight:700}}>{fmtTL(k.brut)}</div></div>
-            <div style={{background:D.rS,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Stopaj (%20)</div><div style={{fontSize:12,fontWeight:700,color:D.r}}>{fmtTL(k.stopaj)}</div></div>
+          {/* Ödediğin Kira */}
+          <div style={{display:"grid",gridTemplateColumns:k.stopajVar?"1fr 1fr 1fr":"1fr",gap:3}}>
+            <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Ödediğin ({k.periyod==="yillik"?"yıllık":"aylık"})</div><div style={{fontSize:12,fontWeight:700}}><InlineEdit value={k.net} type="number" fmt={fmtTL} onSave={v=>{const log=[...(k.artisLog||[])];if(v!==k.net)log.push({tarih:TODAY.toISOString().split("T")[0],eskiNet:k.net,yeniNet:v});update("kiralar",kiralar.map(x=>x.id===k.id?{...x,net:v,artisLog:log}:x));}}/></div></div>
+            {k.stopajVar&&<div style={{background:"rgba(220,62,53,0.05)",borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Brüt ({k.periyod==="yillik"?"yıllık":"aylık"})</div><div style={{fontSize:12,fontWeight:700}}>{fmtTL(k.periyod==="yillik"?k.yillikBrut:k.aylikBrut)}</div></div>}
+            {k.stopajVar&&<div style={{background:D.rS,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Stopaj %20 ({k.periyod==="yillik"?"yıllık":"aylık"})</div><div style={{fontSize:12,fontWeight:700,color:D.r}}>{fmtTL(k.periyod==="yillik"?k.yillikStopaj:k.aylikStopaj)}</div></div>}
           </div>
-          {k.kontratTarih&&<div style={{fontSize:8,color:D.t3,marginTop:3}}>Kontrat: {k.kontratTarih}{k.artisTarih?` • Artış: ${k.artisTarih}`:""}</div>}
-          {/* Artış Geçmişi */}
+          {/* Stopajlı ise "bu hale geliyor" özeti */}
+          {k.stopajVar&&<div style={{background:"rgba(220,62,53,0.03)",borderRadius:8,padding:"5px 8px",marginTop:4,border:"1px dashed rgba(220,62,53,0.15)"}}>
+            <div style={{fontSize:9,fontWeight:700,color:D.r}}>⚠️ Stopaj ile şu hale geliyor:</div>
+            <div style={{fontSize:8,color:D.t2,marginTop:2}}>
+              Sen <strong>{fmtTL(k.periyod==="yillik"?k.yillikNet:k.aylikNet)}</strong> ödüyorsun → Brüt <strong>{fmtTL(k.periyod==="yillik"?k.yillikBrut:k.aylikBrut)}</strong> → Stopaj <strong style={{color:D.r}}>{fmtTL(k.periyod==="yillik"?k.yillikStopaj:k.aylikStopaj)}</strong> vergi dairesine beyan
+            </div>
+            <div style={{fontSize:8,color:D.t2}}>Yıllık: Ödeme {fmtTL(k.yillikNet)} → Stopaj <strong style={{color:D.r}}>{fmtTL(k.yillikStopaj)}</strong></div>
+          </div>}
+          {/* Yıllık kira ise aylık eşdeğeri */}
+          {k.periyod==="yillik"&&<div style={{fontSize:8,color:D.t3,marginTop:3}}>Aylık eşdeğer: {fmtTL(k.aylikNet)}{k.stopajVar?` | Aylık stopaj: ${fmtTL(k.aylikStopaj)}`:""}</div>}
           {k.artisLog&&k.artisLog.length>0&&<div style={{marginTop:4,borderTop:`1px dashed ${D.blueBd}`,paddingTop:4}}>
             <div style={{fontSize:8,fontWeight:700,color:D.blue,marginBottom:2}}>📈 Artış Geçmişi</div>
             {k.artisLog.map((log,li)=><div key={li} style={{fontSize:8,color:D.t2,display:"flex",gap:6}}>
-              <span>{log.tarih}</span>
-              <span style={{color:D.r}}>{fmtTL(log.eskiNet)}</span>
-              <span>→</span>
+              <span>{log.tarih}</span><span style={{color:D.r}}>{fmtTL(log.eskiNet)}</span><span>→</span>
               <span style={{color:D.g,fontWeight:600}}>{fmtTL(log.yeniNet)}</span>
-              <span style={{color:D.t3}}>(%{Math.round((log.yeniNet/log.eskiNet-1)*100)} artış)</span>
+              <span style={{color:D.t3}}>(%{Math.round((log.yeniNet/log.eskiNet-1)*100)})</span>
             </div>)}
           </div>}
-          <div style={{fontSize:8,color:D.t3,marginTop:2}}>Yıllık: Net {fmtTL(k.net*12)} | Stopaj {fmtTL(k.stopaj*12)}</div>
         </div>)}
         {kiralar.length===0&&<div style={{padding:14,textAlign:"center",fontSize:12,color:D.t3,background:D.w,borderRadius:12,boxShadow:D.s1,marginBottom:8}}>Kira ekleyin</div>}
         {/* Toplam Stopaj */}
-        <div style={{background:D.blueMi,borderRadius:10,padding:"8px 12px",marginBottom:12,display:"flex",justifyContent:"space-between",fontSize:12}}>
-          <span style={{fontWeight:700}}>Toplam Muhtasar Stopaj</span>
-          <span style={{fontWeight:800,color:D.r}}>{fmtTL(topStopaj)}/ay • {fmtTL(topStopaj*12)}/yıl</span>
+        <div style={{background:D.blueMi,borderRadius:10,padding:"8px 12px",marginBottom:12}}>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:2}}>
+            <span style={{fontWeight:700}}>Toplam Muhtasar Stopaj</span>
+            <span style={{fontWeight:800,color:D.r}}>{fmtTL(topKiraAylikStopaj)}/ay</span>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:D.t2}}>
+            <span>Yıllık kira toplamı: {fmtTL(topKiraYillikNet)} | Yıllık stopaj: <strong style={{color:D.r}}>{fmtTL(topKiraYillikStopaj)}</strong></span>
+          </div>
         </div>
 
         {/* ═══ FATURALAR & SABİT GİDERLER ═══ */}
