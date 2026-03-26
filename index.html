@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="tr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>BARD_OS v34.0</title>
+<title>BARD_OS v35.0</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 <style>body{margin:0;padding:0;overflow:hidden}#root{width:100vw;height:100vh}.ld{width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F5F0E8}.sp{width:44px;height:44px;border:3px solid rgba(27,79,142,.12);border-top-color:#1B4F8E;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}@keyframes spin{to{transform:rotate(360deg)}}.ld p{color:#1B4F8E;font-size:14px;font-weight:600;font-family:-apple-system,sans-serif}</style></head><body>
-<div id="root"><div class="ld"><div class="sp"></div><p>BARD_OS v34.0</p></div></div>
+<div id="root"><div class="ld"><div class="sp"></div><p>BARD_OS v35.0</p></div></div>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.9/babel.min.js"></script>
@@ -972,18 +972,128 @@ function Satis({name,goHome,goBack,onNav,qb}){const[cat,setCat]=useState("kahve"
 return<div style={{height:"100vh",display:"flex",flexDirection:"column",background:D.ivory,fontFamily:D.f,color:D.t}}><style>{G}</style><Header title={"Satış — "+name} onHome={goHome} onBack={goBack}/><div style={{flex:1,display:"flex",overflow:"hidden"}}><div style={{flex:1,display:"flex",flexDirection:"column"}}><div style={{display:"flex",gap:5,padding:"8px 12px"}}>{CATS.map(c=>{const ac=cat===c.id;return<button key={c.id} onClick={()=>setCat(c.id)} className="tap" style={{display:"flex",alignItems:"center",gap:5,padding:"5px 9px 5px 5px",borderRadius:50,border:"none",cursor:"pointer",background:ac?D.blue:D.w,boxShadow:D.s1}}><Img src={A[c.a]} size={22} round/><span style={{fontSize:11,fontWeight:600,color:ac?D.w:D.t,whiteSpace:"nowrap"}}>{c.n}</span></button>;})}</div><div style={{flex:1,overflow:"auto",padding:"3px 12px 12px"}}><div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(95px,1fr))",gap:6}}>{prods.map(p=>{const ic=cart.find(c=>c.id===p.id);return<button key={p.id} onClick={()=>add(p)} className="tap" style={{background:D.w,borderRadius:12,border:ic?`2px solid ${D.blue}`:`1px solid ${D.blueBd}`,padding:"10px 7px 7px",cursor:"pointer",textAlign:"left",position:"relative",boxShadow:D.s1}}>{ic&&<div style={{position:"absolute",top:4,right:4,width:18,height:18,borderRadius:9,background:D.blue,color:D.w,fontSize:9,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>{ic.q}</div>}<div style={{fontSize:11,fontWeight:600}}>{p.n}</div><div style={{fontSize:13,fontWeight:800,color:D.blue}}>₺{p.p}</div></button>;})}</div></div></div><div style={{width:230,background:D.w,borderLeft:`1px solid ${D.blueBd}`,display:"flex",flexDirection:"column"}}><div style={{padding:"10px 12px",borderBottom:`1px solid ${D.blueBd}`,fontWeight:700,fontSize:13}}>Adisyon</div><div style={{flex:1,overflow:"auto"}}>{cart.map(it=><div key={it.id} style={{display:"flex",justifyContent:"space-between",padding:"6px 12px",borderBottom:`1px solid ${D.blueGh}`,fontSize:11}}><span>{it.q}× {it.n}</span><span style={{fontWeight:700,color:D.blue}}>₺{it.p*it.q}</span></div>)}</div>{cart.length>0&&<div style={{padding:"10px 12px",borderTop:`1px solid ${D.blueBd}`,background:D.ivory}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}><span style={{fontWeight:600,fontSize:12}}>Toplam</span><span style={{fontSize:17,fontWeight:800,color:D.blue,fontFamily:D.fd}}>₺{fmt(total)}</span></div><div style={{display:"flex",gap:5}}><button className="tap" style={{flex:1,padding:8,borderRadius:10,border:"none",background:D.gS,cursor:"pointer",fontWeight:700,color:D.g,fontSize:11,fontFamily:D.f}}>Nakit</button><button className="tap" style={{flex:1,padding:8,borderRadius:10,border:"none",background:D.blueMi,cursor:"pointer",fontWeight:700,color:D.blue,fontSize:11,fontFamily:D.f}}>Kart</button></div></div>}</div></div><QBar onNav={onNav} active={qb}/></div>;}
 
 const BRANCHES={ltd:[{id:"meydan",name:"Meydan",type:"garsonlu"},{id:"imalathane",name:"İmalathane",type:"uretim"}],sahis:[{id:"ktu",name:"KTÜ",type:"self"},{id:"samsun",name:"Samsun",type:"self"}]};
+/* ═══ ŞUBE KONTROL PANELİ ═══ */
+function SubePanel({branch,companyId,data,setData,goBack,goPos,goZ,user}){
+  const co=companyId;const d=data[co];const bName=branch.name;
+  const update=(key,val)=>{const nd={...data,[co]:{...d,[key]:val}};setData(nd);};
+  const personel=(d.personel||[]).filter(p=>p.sube===bName);
+  const kiralar=(d.kiralar||[]).filter(k=>(k.yer||"").includes(bName)||(k.sube||"")===bName);
+  const faturalar=(d.faturalar||[]).filter(f=>(f.sube||"")===bName);
+  /* Hesaplama sabitleri */
+  const ASGARI_BRUT=33030;const SGK_ISCIPAY=0.14;const SGK_ISSIZ_ISCI=0.01;const SGK_ISVEREN=0.155;const SGK_ISSIZ_ISVEREN=0.02;const DAMGA=0.00759;
+  const ASGARI_GV_ISTISNA=ASGARI_BRUT*(1-SGK_ISCIPAY-SGK_ISSIZ_ISCI);const ASGARI_DAMGA_ISTISNA=ASGARI_BRUT;
+  const GV_DILIM=[{limit:190000,oran:0.15},{limit:400000,oran:0.20},{limit:1500000,oran:0.27},{limit:5300000,oran:0.35},{limit:Infinity,oran:0.40}];
+  const gvH=(m)=>{if(m<=0)return 0;let v=0,k=m,p=0;for(const dd of GV_DILIM){const g=dd.limit===Infinity?k:dd.limit-p;const t=Math.min(k,g);v+=t*dd.oran;k-=t;p=dd.limit;if(k<=0)break;}return v;};
+  const hesapla=(net)=>{let b=net*1.42;for(let i=0;i<50;i++){const s=b*SGK_ISCIPAY;const is=b*SGK_ISSIZ_ISCI;const gm=b-s-is;const vt=Math.max(0,gm-ASGARI_GV_ISTISNA);const gv=gvH(vt)-gvH(0);const dm=Math.max(0,b-ASGARI_DAMGA_ISTISNA)*DAMGA;const hn=b-s-is-gv-dm;const f=net-hn;if(Math.abs(f)<0.5)break;b+=f*0.8;}b=Math.round(b);return{brut:b,sgkIsveren:Math.round(b*SGK_ISVEREN),issizIsveren:Math.round(b*SGK_ISSIZ_ISVEREN),isverenToplam:Math.round(b*SGK_ISVEREN)+Math.round(b*SGK_ISSIZ_ISVEREN)};};
+  /* Personel hesapları */
+  const pCalc=personel.map(p=>{const h=hesapla(p.net);const yemek=p.yemekAy||((p.yemekGun||330)*(p.calGun||26));return{...p,...h,yemekAy:yemek,topKisi:h.brut+h.isverenToplam+(p.prim||0)+yemek};});
+  const topPNet=pCalc.reduce((s,p)=>s+p.net,0);const topPSGK=pCalc.reduce((s,p)=>s+p.isverenToplam,0);
+  const topPYemek=pCalc.reduce((s,p)=>s+p.yemekAy,0);const topPPrim=pCalc.reduce((s,p)=>s+(p.prim||0),0);
+  const topPMaliyet=pCalc.reduce((s,p)=>s+p.topKisi,0);
+  /* Kira hesapları */
+  const topKiraNet=kiralar.reduce((s,k)=>s+k.net,0);const topStopaj=kiralar.reduce((s,k)=>s+Math.round(k.net*0.25),0);
+  /* Fatura hesapları */
+  const topFatura=faturalar.reduce((s,f)=>s+f.tutar,0);const topKDV=faturalar.reduce((s,f)=>s+(f.kdv||0),0);
+  const bekleyen=faturalar.filter(f=>f.durum!=="odendi").length;
+  /* Toplam şube gideri */
+  const topSube=topPMaliyet+topKiraNet+topFatura+topKDV;
+
+  return<div style={{height:"100vh",display:"flex",flexDirection:"column",background:D.ivory,fontFamily:D.f,color:D.t}}><style>{G}</style>
+    <Header title={bName+" Kontrol Paneli"} crumbs={(co==="ltd"?"Limited":"Şahıs")+" › "+bName} onBack={goBack} onHome={goBack}/>
+    <div style={{flex:1,overflow:"auto",padding:14}}>
+
+    {/* ═══ ŞUBE ÖZET BANNER ═══ */}
+    <div className="fu" style={{background:`linear-gradient(135deg,${D.blue},${D.blueDk})`,borderRadius:16,padding:14,marginBottom:10,color:D.w}}>
+      <div style={{fontSize:10,opacity:.7}}>🏪 {bName} — Aylık Toplam Gider</div>
+      <div style={{fontSize:22,fontWeight:800,fontFamily:D.fd,marginTop:4}}>{fmtTL(topSube)}</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:4,marginTop:8}}>
+        <div><div style={{fontSize:7,opacity:.5}}>Personel</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(topPMaliyet)}</div></div>
+        <div><div style={{fontSize:7,opacity:.5}}>Kira</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(topKiraNet)}</div></div>
+        <div><div style={{fontSize:7,opacity:.5}}>Fatura</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(topFatura+topKDV)}</div></div>
+        <div><div style={{fontSize:7,opacity:.5}}>KDV İade</div><div style={{fontSize:11,fontWeight:700,color:"#4ade80"}}>{fmtTL(topKDV)}</div></div>
+      </div>
+    </div>
+
+    {/* ═══ HIZLI ERİŞİM BUTONLARI ═══ */}
+    <div style={{display:"flex",gap:6,marginBottom:10}}>
+      <button onClick={goPos} className="tap" style={{flex:1,padding:"10px 8px",borderRadius:12,border:`1.5px solid ${D.blueBd}`,background:D.w,cursor:"pointer",fontFamily:D.f,fontWeight:700,fontSize:12,color:D.blue}}>☕ Satış/POS</button>
+      {user.role==="patron"&&<button onClick={goZ} className="tap" style={{flex:1,padding:"10px 8px",borderRadius:12,border:`1.5px solid ${D.blueBd}`,background:D.w,cursor:"pointer",fontFamily:D.f,fontWeight:700,fontSize:12,color:D.blue}}>📷 Kasa Kapat</button>}
+    </div>
+
+    {/* ═══ PERSONEL ═══ */}
+    <div style={{fontWeight:700,fontSize:13,marginBottom:6}}>👥 Personel ({personel.length} kişi) — {fmtTL(topPMaliyet)}</div>
+    {pCalc.map((p,i)=><div key={p.id} className="fu" style={{background:D.w,borderRadius:12,padding:"9px 11px",boxShadow:D.s1,marginBottom:6,border:`1px solid ${D.blueBd}`,animationDelay:i*.03+"s"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}}>
+        <div style={{fontWeight:700,fontSize:12}}>{p.ad}{p.partTime&&<span style={{fontSize:7,background:D.o,color:D.w,padding:"1px 4px",borderRadius:3,marginLeft:3}}>PT</span>}</div>
+        <span style={{fontWeight:800,fontSize:12,color:D.blue,fontFamily:D.fd}}>{fmtTL(p.topKisi)}</span>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:3}}>
+        <div style={{background:D.blueMi,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Net</div><div style={{fontSize:10,fontWeight:600}}><InlineEdit value={p.net} type="number" fmt={fmtTL} onSave={v=>{update("personel",(d.personel||[]).map(x=>x.id===p.id?{...x,net:v}:x));}}/></div></div>
+        <div style={{background:D.blueMi,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Brüt</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(p.brut)}</div></div>
+        <div style={{background:D.rS,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>SGK İşv.</div><div style={{fontSize:10,fontWeight:600,color:D.r}}>{fmtTL(p.isverenToplam)}</div></div>
+        <div style={{background:p.prim?D.gS:D.blueGh,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Prim</div><div style={{fontSize:10,fontWeight:600,color:p.prim?D.g:D.t3}}><InlineEdit value={p.prim||0} type="number" fmt={v=>v?fmtTL(v):"—"} onSave={v=>{update("personel",(d.personel||[]).map(x=>x.id===p.id?{...x,prim:v}:x));}}/></div></div>
+      </div>
+      <div style={{fontSize:8,color:D.t3,marginTop:2}}>Yemek: {fmtTL(p.yemekAy)}/ay ({Math.round(p.yemekAy/(p.calGun||26))} ₺/gün)</div>
+    </div>)}
+    {personel.length===0&&<div style={{padding:12,textAlign:"center",fontSize:11,color:D.t3,background:D.w,borderRadius:10,marginBottom:8}}>Bu şubede personel yok</div>}
+
+    {/* ═══ KİRALAR ═══ */}
+    <div style={{fontWeight:700,fontSize:13,marginBottom:6,marginTop:6}}>🏠 Kiralar — {fmtTL(topKiraNet)}</div>
+    {kiralar.map(k=>{const brut=Math.round(k.net/0.80);const stopaj=brut-k.net;
+    return<div key={k.id} className="fu" style={{background:D.w,borderRadius:12,padding:"9px 11px",boxShadow:D.s1,marginBottom:6,border:`1px solid ${D.blueBd}`}}>
+      <div style={{fontWeight:700,fontSize:12,marginBottom:3}}>{k.yer}</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3}}>
+        <div style={{background:D.blueMi,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Net</div><div style={{fontSize:10,fontWeight:700}}><InlineEdit value={k.net} type="number" fmt={fmtTL} onSave={v=>{const log=[...(k.artisLog||[])];if(v!==k.net)log.push({tarih:TODAY.toISOString().split("T")[0],eskiNet:k.net,yeniNet:v});update("kiralar",(d.kiralar||[]).map(x=>x.id===k.id?{...x,net:v,artisLog:log}:x));}}/></div></div>
+        <div style={{background:D.blueMi,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Brüt</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(brut)}</div></div>
+        <div style={{background:D.rS,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Stopaj</div><div style={{fontSize:10,fontWeight:600,color:D.r}}>{fmtTL(stopaj)}</div></div>
+      </div>
+      {k.sahip&&<div style={{fontSize:8,color:D.t3,marginTop:2}}>{k.sahip}{k.iban?" • "+k.iban:""}</div>}
+    </div>;})}
+    {kiralar.length===0&&<div style={{padding:12,textAlign:"center",fontSize:11,color:D.t3,background:D.w,borderRadius:10,marginBottom:8}}>Bu şubede kira yok</div>}
+
+    {/* ═══ FATURALAR & SABİT GİDERLER ═══ */}
+    <div style={{fontWeight:700,fontSize:13,marginBottom:6,marginTop:6}}>⚡ Fatura & Giderler — {fmtTL(topFatura+topKDV)}{bekleyen>0&&<span style={{fontSize:9,color:D.o,fontWeight:400}}> ({bekleyen} bekliyor)</span>}</div>
+    {faturalar.map((f,i)=>{const kdv=f.kdv||0;
+    return<div key={f.id} className="fu" style={{background:D.w,borderRadius:12,padding:"9px 11px",boxShadow:D.s1,marginBottom:6,border:`1px solid ${f.durum==="odendi"?"rgba(45,168,84,0.3)":D.blueBd}`,animationDelay:i*.02+"s"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:2}}>
+        <div style={{fontWeight:700,fontSize:12}}>{f.tip}</div>
+        <button onClick={()=>{update("faturalar",(d.faturalar||[]).map(x=>x.id===f.id?{...x,durum:x.durum==="odendi"?"bekliyor":"odendi",odemeTarih:x.durum!=="odendi"?TODAY.toISOString().split("T")[0]:""}:x));}} className="tap" style={{padding:"2px 8px",borderRadius:6,border:"none",fontSize:8,fontWeight:700,cursor:"pointer",background:f.durum==="odendi"?D.gS:D.rS,color:f.durum==="odendi"?D.g:D.r}}>{f.durum==="odendi"?"✓ Ödendi":"⏳ Bekliyor"}</button>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3}}>
+        <div style={{background:D.blueMi,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Tutar</div><div style={{fontSize:10,fontWeight:600}}><InlineEdit value={f.tutar} type="number" fmt={fmtTL} onSave={v=>{const nkdv=Math.round(v*(f.kdvOran||20)/100);update("faturalar",(d.faturalar||[]).map(x=>x.id===f.id?{...x,tutar:v,kdv:nkdv}:x));}}/></div></div>
+        <div style={{background:D.gS,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>KDV</div><div style={{fontSize:10,fontWeight:600,color:D.g}}>{kdv?fmtTL(kdv):"—"}</div></div>
+        <div style={{background:D.blueGh,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Toplam</div><div style={{fontSize:10,fontWeight:700}}>{fmtTL(f.tutar+kdv)}</div></div>
+      </div>
+      {f.not&&<div style={{fontSize:7,color:D.t3,marginTop:2,fontStyle:"italic"}}>{f.not}</div>}
+      {f.sonOdeme&&<div style={{fontSize:7,color:daysTil(f.sonOdeme)<=3?D.r:D.t3,marginTop:1}}>Son Ödeme: {f.sonOdeme}</div>}
+    </div>;})}
+    {faturalar.length===0&&<div style={{padding:12,textAlign:"center",fontSize:11,color:D.t3,background:D.w,borderRadius:10,marginBottom:8}}>Bu şubede fatura yok</div>}
+
+    {/* ═══ VERGİ KALKANI ═══ */}
+    <div className="fu" style={{background:D.gS,borderRadius:12,padding:"10px 12px",marginTop:6}}>
+      <div style={{fontSize:11,fontWeight:700,color:D.g}}>🛡️ {bName} Vergi Kalkanı</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4,marginTop:4}}>
+        <div><div style={{fontSize:8,color:D.t3}}>İndirilecek KDV</div><div style={{fontSize:12,fontWeight:700,color:D.g}}>{fmtTL(topKDV)}</div></div>
+        <div><div style={{fontSize:8,color:D.t3}}>Kira Stopajı</div><div style={{fontSize:12,fontWeight:700,color:D.o}}>{fmtTL(topStopaj)}</div></div>
+      </div>
+    </div>
+
+    </div>
+  </div>;
+}
+
 function CoMenu({companyId,goHome,onNav,data,setData,user}){const[scr,setScr]=useState("menu");const[branch,setBranch]=useState(null);const branches=BRANCHES[companyId];const name=companyId==="ltd"?"Bardaks Limited":"Bardaks Şahıs";const goMenu=()=>{setScr("menu");setBranch(null);};
-if(scr==="pos"&&branch)return<Satis name={branch.name} goHome={goHome} goBack={goMenu} onNav={onNav} qb={companyId}/>;
-if(scr==="sevk")return<Satis name="İmalathane (Sevk)" goHome={goHome} goBack={goMenu} onNav={onNav} qb="ltd"/>;
-if(scr==="masa")return<Satis name="Meydan" goHome={goHome} goBack={goMenu} onNav={onNav} qb="ltd"/>;
-if(scr==="z")return<ZRapor sube={branch?.name||"Meydan"} sirket={companyId} goHome={goHome} goBack={goMenu} data={data} setData={setData}/>;
-return<div style={{height:"100vh",display:"flex",flexDirection:"column",background:D.ivory,fontFamily:D.f,color:D.t}}><style>{G}</style><Header title={name} crumbs={"Ana Sayfa › "+(companyId==="ltd"?"Limited":"Şahıs")} onHome={goHome}/><div style={{flex:1,overflow:"auto",padding:14,maxWidth:440,margin:"0 auto",width:"100%"}}>{branches.map((b,i)=><button key={b.id} onClick={()=>{if(b.type==="garsonlu")setScr("masa");else if(b.type==="uretim")setScr("sevk");else{setBranch(b);setScr("pos");}}} className="tap fu" style={{width:"100%",background:D.w,borderRadius:16,padding:"14px 16px",border:`1.5px solid ${D.blueBd}`,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:12,boxShadow:D.s1,marginBottom:10,animationDelay:i*.07+"s"}}><Img src={b.type==="garsonlu"?A.kafe:b.type==="uretim"?A.kruvasan:A.kahve} size={40} round/><div><div style={{fontWeight:700,fontSize:14}}>{b.name}</div><div style={{fontSize:11,color:D.t3}}>{b.type==="garsonlu"?"Masa Planı":b.type==="uretim"?"Sevkiyat":"Hızlı Satış"}</div></div></button>)}
-{user.role==="patron"&&<><h3 style={{fontSize:11,fontWeight:700,color:D.t3,margin:"16px 0 8px"}}>DENETİM</h3>{branches.map(b=><button key={"z-"+b.id} onClick={()=>{setBranch(b);setScr("z");}} className="tap fu" style={{width:"100%",background:D.w,borderRadius:14,padding:"12px 16px",border:`1.5px solid ${D.blueBd}`,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:10,boxShadow:D.s1,marginBottom:8}}><Ic.Camera s={20} c={D.blue}/><div><div style={{fontWeight:600,fontSize:13}}>Kasa Kapat — {b.name}</div><div style={{fontSize:10,color:D.t3}}>Z-Raporu + Nakit Sayımı</div></div></button>)}</>}
+if(scr==="pos"&&branch)return<Satis name={branch.name} goHome={goHome} goBack={()=>setScr("panel")} onNav={onNav} qb={companyId}/>;
+if(scr==="sevk")return<Satis name="İmalathane (Sevk)" goHome={goHome} goBack={()=>setScr("panel")} onNav={onNav} qb="ltd"/>;
+if(scr==="masa")return<Satis name="Meydan" goHome={goHome} goBack={()=>setScr("panel")} onNav={onNav} qb="ltd"/>;
+if(scr==="z"&&branch)return<ZRapor sube={branch?.name||"Meydan"} sirket={companyId} goHome={goHome} goBack={()=>setScr("panel")} data={data} setData={setData}/>;
+if(scr==="panel"&&branch)return<SubePanel branch={branch} companyId={companyId} data={data} setData={setData} goBack={goMenu} goPos={()=>{if(branch.type==="garsonlu")setScr("masa");else if(branch.type==="uretim")setScr("sevk");else setScr("pos");}} goZ={()=>setScr("z")} user={user}/>;
+return<div style={{height:"100vh",display:"flex",flexDirection:"column",background:D.ivory,fontFamily:D.f,color:D.t}}><style>{G}</style><Header title={name} crumbs={"Ana Sayfa › "+(companyId==="ltd"?"Limited":"Şahıs")} onHome={goHome}/><div style={{flex:1,overflow:"auto",padding:14,maxWidth:440,margin:"0 auto",width:"100%"}}>{branches.map((b,i)=><button key={b.id} onClick={()=>{setBranch(b);setScr("panel");}} className="tap fu" style={{width:"100%",background:D.w,borderRadius:16,padding:"14px 16px",border:`1.5px solid ${D.blueBd}`,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:12,boxShadow:D.s1,marginBottom:10,animationDelay:i*.07+"s"}}><Img src={b.type==="garsonlu"?A.kafe:b.type==="uretim"?A.kruvasan:A.kahve} size={40} round/><div><div style={{fontWeight:700,fontSize:14}}>{b.name}</div><div style={{fontSize:11,color:D.t3}}>{b.type==="garsonlu"?"Kontrol Paneli":b.type==="uretim"?"Kontrol Paneli":"Kontrol Paneli"}</div></div></button>)}
 </div><QBar onNav={onNav} active={companyId}/></div>;}
 
 /* ═══ ANA SAYFA ═══ */
 function Dashboard({user,onNav,data}){const warns=[];[data.ltd,data.sahis].forEach(d=>{d.krediler.forEach(k=>{const x=daysTil(k.nextDate);if(x>=0&&x<=7)warns.push(k.bank+" — "+x+"g");});d.cekler.forEach(c=>{if(!c.tahsil){const x=daysTil(c.vade);if(x>=0&&x<=7)warns.push("["+(c.banka||"Çek")+"] "+fmtTL(c.tutar)+" — "+x+"g");}});(d.zRaporlari||[]).forEach(z=>{if(z.fark<0)warns.push("⚠️ Kasa açığı "+z.sube+": "+fmtTL(Math.abs(z.fark)));});});
-return<div style={{height:"100vh",display:"flex",flexDirection:"column",background:D.ivory,fontFamily:D.f,color:D.t}}><style>{G}</style><header style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:D.w,borderBottom:`1px solid ${D.blueBd}`}}><Img src={A.logo} size={36} round/><div style={{flex:1}}><div style={{fontWeight:800,fontSize:16,color:D.blue,fontFamily:D.fd}}>Bardak's</div><div style={{fontSize:10,color:D.t3}}>v16.0 — {user.name}</div></div><button onClick={()=>onNav("logout")} className="tap" style={{display:"flex",alignItems:"center",gap:3,padding:"5px 10px",borderRadius:50,border:"none",background:D.blueMi,cursor:"pointer",color:D.blue,fontSize:11,fontWeight:600,fontFamily:D.f}}><Ic.Lock s={13} c={D.blue}/>Çıkış</button></header>
+return<div style={{height:"100vh",display:"flex",flexDirection:"column",background:D.ivory,fontFamily:D.f,color:D.t}}><style>{G}</style><header style={{display:"flex",alignItems:"center",gap:12,padding:"12px 14px",background:D.w,borderBottom:`1px solid ${D.blueBd}`}}><Img src={A.logo} size={36} round/><div style={{flex:1}}><div style={{fontWeight:800,fontSize:16,color:D.blue,fontFamily:D.fd}}>Bardak's</div><div style={{fontSize:10,color:D.t3}}>v35.0 — {user.name}</div></div><button onClick={()=>onNav("logout")} className="tap" style={{display:"flex",alignItems:"center",gap:3,padding:"5px 10px",borderRadius:50,border:"none",background:D.blueMi,cursor:"pointer",color:D.blue,fontSize:11,fontWeight:600,fontFamily:D.f}}><Ic.Lock s={13} c={D.blue}/>Çıkış</button></header>
 <div style={{flex:1,overflow:"auto",padding:"12px 14px 90px"}}>{warns.length>0&&<div className="fu" style={{background:D.rS,border:"1.5px solid rgba(220,62,53,.18)",borderRadius:14,padding:"10px 12px",marginBottom:10,animation:"glow 2s ease infinite"}}><div style={{display:"flex",alignItems:"center",gap:5,marginBottom:3}}><Ic.Alert/><span style={{fontWeight:700,color:D.r,fontSize:12}}>Kritik Uyarılar</span></div>{warns.slice(0,6).map((w,i)=><div key={i} style={{fontSize:11,color:D.r,paddingLeft:20}}>• {w}</div>)}</div>}
 <div style={{display:"flex",flexDirection:"column",gap:10}}><button onClick={()=>onNav("ltd")} className="tap fu" style={{background:D.w,borderRadius:18,padding:"16px 18px",border:`1.5px solid ${D.blueBd}`,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:14,boxShadow:D.s2}}><Img src={A.kafe} size={48} round/><div><div style={{fontWeight:800,fontSize:16,color:D.blue}}>Bardaks Limited</div><div style={{fontSize:12,color:D.t3}}>Meydan + İmalathane</div></div></button>
 <button onClick={()=>onNav("sahis")} className="tap fu" style={{background:D.w,borderRadius:18,padding:"16px 18px",border:`1.5px solid ${D.blueBd}`,cursor:"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:14,boxShadow:D.s2,animationDelay:"0.08s"}}><Img src={A.kruvasan} size={48} round/><div><div style={{fontWeight:800,fontSize:16,color:D.blue}}>Bardaks Şahıs</div><div style={{fontSize:12,color:D.t3}}>KTÜ + Samsun</div></div></button>
