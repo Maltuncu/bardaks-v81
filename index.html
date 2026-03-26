@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="tr"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>BARD_OS v30.0</title>
+<title>BARD_OS v32.0</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☕</text></svg>">
 <style>body{margin:0;padding:0;overflow:hidden}#root{width:100vw;height:100vh}.ld{width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#F5F0E8}.sp{width:44px;height:44px;border:3px solid rgba(27,79,142,.12);border-top-color:#1B4F8E;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px}@keyframes spin{to{transform:rotate(360deg)}}.ld p{color:#1B4F8E;font-size:14px;font-weight:600;font-family:-apple-system,sans-serif}</style></head><body>
-<div id="root"><div class="ld"><div class="sp"></div><p>BARD_OS v30.0</p></div></div>
+<div id="root"><div class="ld"><div class="sp"></div><p>BARD_OS v32.0</p></div></div>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.9/babel.min.js"></script>
@@ -262,7 +262,7 @@ function VergiPanel({data,co,gp}){
 
 /* ═══ FİNANS ANA MODÜL ═══ */
 function Finance({goHome,onNav,data,setData}){
-  const[co,setCo]=useState("ltd");const[sub,setSub]=useState("krediler");const[gp,setGp]=useState(3280);const[addOpen,setAddOpen]=useState(false);const[form,setForm]=useState({});const[selKredi,setSelKredi]=useState(null);const[pSube,setPSube]=useState("tum");const[cekArama,setCekArama]=useState("");const[cekFiltre,setCekFiltre]=useState("tum");const[editId,setEditId]=useState(null);
+  const[co,setCo]=useState("ltd");const[sub,setSub]=useState("krediler");const[gp,setGp]=useState(3280);const[addOpen,setAddOpen]=useState(false);const[form,setForm]=useState({});const[selKredi,setSelKredi]=useState(null);const[pSube,setPSube]=useState("tum");const[cekArama,setCekArama]=useState("");const[cekFiltre,setCekFiltre]=useState("tum");const[editId,setEditId]=useState(null);const[deptDetay,setDeptDetay]=useState(null);const[kisiDetay,setKisiDetay]=useState(null);
   useEffect(()=>{fetch("https://api.collectapi.com/economy/goldPrice",{headers:{"authorization":"apikey 6UxMOmGMbHXBQcMpGDOy3p:0kAO5MkSr8dNlJiV5WOJlT","content-type":"application/json"}}).then(r=>r.json()).then(d=>{if(d.success&&d.result){const g=d.result.find(x=>x.name==="Gram Altın");if(g)setGp(Math.round(g.selling));}}).catch(()=>{});},[]);
 
   const d=data[co]||defData[co];const kT=(d.krediler||[]).reduce((s,k)=>s+k.monthly*k.remaining,0);const cT=(d.kartlar||[]).reduce((s,k)=>s+k.used,0);const sT=(d.sahis||[]).reduce((s,b)=>s+b.tutar,0);const aT=(d.altin||[]).reduce((s,a)=>s+a.gram*gp,0);const ckT=(d.cekler||[]).reduce((s,c)=>s+c.tutar,0);const grand=kT+cT+sT+aT+ckT;
@@ -276,13 +276,13 @@ function Finance({goHome,onNav,data,setData}){
   const payKredi=id=>{update("krediler",d.krediler.map(k=>k.id===id?{...k,remaining:Math.max(0,k.remaining-1),paidMonths:[...(k.paidMonths||[]),k.total-k.remaining+1]}:k));};
   const payTaksit=(krediId,taksitNo)=>{update("krediler",d.krediler.map(k=>{if(k.id!==krediId)return k;const pm=[...(k.paidMonths||[])];if(pm.includes(taksitNo))return k;pm.push(taksitNo);return{...k,remaining:Math.max(0,k.remaining-1),paidMonths:pm};}));};
   const addItem=()=>{if(sub==="krediler")update("krediler",[...d.krediler,{id:nid(),bank:form.bank||"Yeni",monthly:Number(form.monthly)||0,remaining:Number(form.remaining)||12,total:Number(form.remaining)||12,nextDate:form.nextDate||"2026-05-01",ticari:form.ticari==="true",faiz:Number(form.faiz)||0,anapara:Number(form.anapara)||0}]);if(sub==="kartlar")update("kartlar",[...d.kartlar,{id:nid(),name:form.name||"Yeni",limit:Number(form.limit)||0,used:Number(form.used)||0,odeme:form.odeme||"2026-05-01"}]);if(sub==="sahis")update("sahis",[...d.sahis,{id:nid(),kisi:form.kisi||"",tutar:Number(form.tutar)||0,tip:form.tip||"sözlü"}]);if(sub==="altin")update("altin",[...d.altin,{id:nid(),kisi:form.kisi||"",gram:Number(form.gram)||0}]);if(sub==="cekler")update("cekler",[...d.cekler,{id:nid(),no:form.no||"ÇK-"+nid(),tutar:Number(form.tutar)||0,vade:form.vade||"2026-05-01",kime:form.kime||"",banka:form.banka||"",sube:form.sube||"",tip:form.cekTip||"verilen",tahsil:false}]);setAddOpen(false);setForm({});};
-  const openEdit=(key,id)=>{const item=(d[key]||[]).find(x=>x.id===id);if(!item)return;const f={...item};if(key==="krediler"){f.ticari=f.ticari?"true":"false";}if(key==="cekler"){f.cekTip=f.tip;}if(key==="personel"){f.yemekAy=String(f.yemekAy||8580);f.calGun=String(f.calGun||26);f.giris=f.giris||"";f.partTime=!!f.partTime;}setForm(f);setEditId(id);setAddOpen(true);};
+  const openEdit=(key,id)=>{const item=(d[key]||[]).find(x=>x.id===id);if(!item)return;const f={...item};if(key==="krediler"){f.ticari=f.ticari?"true":"false";}if(key==="cekler"){f.cekTip=f.tip;}if(key==="personel"){f.yemekAy=String(f.yemekAy||8580);f.calGun=String(f.calGun||26);f.giris=f.giris||"";f.partTime=!!f.partTime;f.odemeTip=f.odemeTip||"banka";f.odemeRef=f.odemeRef||"";}setForm(f);setEditId(id);setAddOpen(true);};
   const saveEdit=()=>{const key=sub==="personel"?"personel":sub;const arr=d[key]||[];update(key,arr.map(item=>{if(item.id!==editId)return item;const n={...item};if(key==="krediler"){n.bank=form.bank||n.bank;n.monthly=Number(form.monthly)||n.monthly;n.remaining=Number(form.remaining)||n.remaining;n.total=Number(form.total)||n.total;n.nextDate=form.nextDate||n.nextDate;n.ticari=form.ticari==="true";n.faiz=Number(form.faiz)||0;n.anapara=Number(form.anapara)||0;}
     if(key==="kartlar"){n.name=form.name||n.name;n.limit=Number(form.limit)||n.limit;n.used=Number(form.used)||n.used;n.odeme=form.odeme||n.odeme;}
     if(key==="sahis"){n.kisi=form.kisi||n.kisi;n.tutar=Number(form.tutar)||n.tutar;n.tip=form.tip||n.tip;}
     if(key==="altin"){n.kisi=form.kisi||n.kisi;n.gram=Number(form.gram)||n.gram;}
     if(key==="cekler"){n.no=form.no||n.no;n.tutar=Number(form.tutar)||n.tutar;n.vade=form.vade||n.vade;n.kime=form.kime||n.kime;n.banka=form.banka||n.banka;n.sube=form.sube||n.sube;n.tip=form.cekTip||n.tip;}
-    if(key==="personel"){n.ad=form.ad||n.ad;n.sube=form.sube||n.sube;n.net=Number(form.net)||n.net;n.sgk=Number(form.sgk)||n.sgk;n.prim=Number(form.prim)||0;n.yemekAy=Number(form.yemekAy)||(330*(Number(form.calGun)||26));n.calGun=Number(form.calGun)||26;n.giris=form.giris||n.giris||"";n.partTime=!!form.partTime;}
+    if(key==="personel"){n.ad=form.ad||n.ad;n.sube=form.sube||n.sube;n.net=Number(form.net)||n.net;n.sgk=Number(form.sgk)||n.sgk;n.prim=Number(form.prim)||0;n.yemekAy=Number(form.yemekAy)||(330*(Number(form.calGun)||26));n.calGun=Number(form.calGun)||26;n.giris=form.giris||n.giris||"";n.partTime=!!form.partTime;n.odemeTip=form.odemeTip||n.odemeTip||"banka";n.odemeRef=form.odemeRef||n.odemeRef||"";}
     return n;}));setAddOpen(false);setEditId(null);setForm({});};
 
   const tabs=[{id:"krediler",l:"Krediler",e:"🏦"},{id:"sahis",l:"Borçlar",e:"🤝"},{id:"altin",l:"Altın",e:"🥇"},{id:"kartlar",l:"Kartlar",e:"💳"},{id:"cekler",l:"Çekler",e:"📄"},{id:"personel",l:"Personel",e:"👥"},{id:"gider",l:"Giderler",e:"🧾"},{id:"banka",l:"Banka",e:"🏧"},{id:"vergi",l:"Vergi",e:"📊"},{id:"konsolide",l:"Özet",e:"📋"}];
@@ -292,143 +292,106 @@ function Finance({goHome,onNav,data,setData}){
     if(sub==="personel"){
       const personel=d.personel||[];
       const subeler=[...new Set(personel.map(p=>p.sube))];
-      const filtered=pSube==="tum"?personel:personel.filter(p=>p.sube===pSube);
       const ISTISNA_GUN=330;const ISTISNA_KDV_HARIC=300;
       /* ═══ 2026 SGK & VERGİ PARAMETRELERİ (Resmi Gazete 33124, 332 Seri GV Tebliği, 7566 s.K.) ═══ */
-      const ASGARI_BRUT=33030;/* 2026 brüt asgari ücret */
-      const SGK_ISCIPAY=0.14;/* İşçi SGK %14 */
-      const SGK_ISSIZ_ISCI=0.01;/* İşçi işsizlik %1 */
-      const SGK_ISVEREN=0.155;/* İşveren SGK %15.5 (imalat 5 puan indirimli: 21.75-5-1puan=15.75→15.5) */
-      const SGK_ISSIZ_ISVEREN=0.02;/* İşveren işsizlik %2 */
-      const DAMGA=0.00759;/* Damga vergisi binde 7,59 */
-      const ASGARI_NET=28075.50;/* 2026 net asgari ücret */
-      /* Asgari ücret istisna matrahları */
-      const ASGARI_GV_ISTISNA=ASGARI_BRUT*(1-SGK_ISCIPAY-SGK_ISSIZ_ISCI);/* GV matrahı istisnası: 28075.50 */
-      const ASGARI_DAMGA_ISTISNA=ASGARI_BRUT;/* Damga matrahı istisnası: 33030 */
-      /* 2026 Gelir Vergisi Dilimleri — YILLIK kümülatif (ücret gelirleri) */
+      const ASGARI_BRUT=33030;const SGK_ISCIPAY=0.14;const SGK_ISSIZ_ISCI=0.01;
+      const SGK_ISVEREN=0.155;const SGK_ISSIZ_ISVEREN=0.02;const DAMGA=0.00759;
+      const ASGARI_NET=28075.50;
+      const ASGARI_GV_ISTISNA=ASGARI_BRUT*(1-SGK_ISCIPAY-SGK_ISSIZ_ISCI);
+      const ASGARI_DAMGA_ISTISNA=ASGARI_BRUT;
       const GV_DILIM=[{limit:190000,oran:0.15},{limit:400000,oran:0.20},{limit:1500000,oran:0.27},{limit:5300000,oran:0.35},{limit:Infinity,oran:0.40}];
-      const gvHesapla=(matrah)=>{if(matrah<=0)return 0;let v=0,k=matrah,p=0;for(const d of GV_DILIM){const g=d.limit===Infinity?k:d.limit-p;const t=Math.min(k,g);v+=t*d.oran;k-=t;p=d.limit;if(k<=0)break;}return v;};
-      /* Kıdem tazminatı brüt günlük */
-      const KIDEM_TAVAN=33030;/* asgari ücrete eşit brüt aylık referans (basitleştirilmiş) */
+      const gvHesapla=(matrah)=>{if(matrah<=0)return 0;let v=0,k=matrah,p=0;for(const dd of GV_DILIM){const g=dd.limit===Infinity?k:dd.limit-p;const t=Math.min(k,g);v+=t*dd.oran;k-=t;p=dd.limit;if(k<=0)break;}return v;};
+      const KIDEM_TAVAN=33030;
 
-      /* Part-time çarpanı: tam zamanlı=1, yarım=0.5 */
-      const ptCarpan=(p)=>p.partTime?0.5:1;
-
-      /* Netten brüte hesaplama fonksiyonu (kümülatif GV destekli) */
       const hesapla=(netMaas,kumMatrahOnceki)=>{
-        const kumOnceki=kumMatrahOnceki||0;
-        let brut=netMaas*1.42;
-        for(let i=0;i<50;i++){
-          const sgkIsci=brut*SGK_ISCIPAY;
-          const issizIsci=brut*SGK_ISSIZ_ISCI;
-          const gvMatrahi=brut-sgkIsci-issizIsci;
-          const vergiyeTabiMatrah=Math.max(0,gvMatrahi-ASGARI_GV_ISTISNA);
-          const kumYeni=kumOnceki+vergiyeTabiMatrah;
-          const gv=gvHesapla(kumYeni)-gvHesapla(kumOnceki);
-          const damgaMatrahi=Math.max(0,brut-ASGARI_DAMGA_ISTISNA);
-          const damga=damgaMatrahi*DAMGA;
-          const hesapNet=brut-sgkIsci-issizIsci-gv-damga;
-          const fark=netMaas-hesapNet;
-          if(Math.abs(fark)<0.5)break;
-          brut+=fark*0.8;
-        }
-        brut=Math.round(brut);
-        const sgkIsci=Math.round(brut*SGK_ISCIPAY);
-        const issizIsci=Math.round(brut*SGK_ISSIZ_ISCI);
-        const gvMatrahi=brut-sgkIsci-issizIsci;
-        const vergiyeTabiMatrah=Math.max(0,gvMatrahi-ASGARI_GV_ISTISNA);
-        const kumYeni=kumOnceki+vergiyeTabiMatrah;
-        const gv=Math.round(gvHesapla(kumYeni)-gvHesapla(kumOnceki));
+        const kumOnceki=kumMatrahOnceki||0;let brut=netMaas*1.42;
+        for(let i=0;i<50;i++){const sgkI=brut*SGK_ISCIPAY;const issI=brut*SGK_ISSIZ_ISCI;const gvm=brut-sgkI-issI;const vtm=Math.max(0,gvm-ASGARI_GV_ISTISNA);const ky=kumOnceki+vtm;const gv=gvHesapla(ky)-gvHesapla(kumOnceki);const dm=Math.max(0,brut-ASGARI_DAMGA_ISTISNA)*DAMGA;const hn=brut-sgkI-issI-gv-dm;const fk=netMaas-hn;if(Math.abs(fk)<0.5)break;brut+=fk*0.8;}
+        brut=Math.round(brut);const sgkIsci=Math.round(brut*SGK_ISCIPAY);const issizIsci=Math.round(brut*SGK_ISSIZ_ISCI);
+        const gvMatrahi=brut-sgkIsci-issizIsci;const vergiyeTabiMatrah=Math.max(0,gvMatrahi-ASGARI_GV_ISTISNA);
+        const kumYeni=kumOnceki+vergiyeTabiMatrah;const gv=Math.round(gvHesapla(kumYeni)-gvHesapla(kumOnceki));
         const damga=Math.round(Math.max(0,brut-ASGARI_DAMGA_ISTISNA)*DAMGA);
-        const sgkIsveren=Math.round(brut*SGK_ISVEREN);
-        const issizIsveren=Math.round(brut*SGK_ISSIZ_ISVEREN);
-        const isverenToplam=sgkIsveren+issizIsveren;
-        const toplamMaliyet=brut+isverenToplam;
-        /* Vergi dilimi etiketi */
-        let dilim="%15";for(const d of GV_DILIM){if(kumYeni<=d.limit){dilim="%"+(d.oran*100).toFixed(0);break;}}
+        const sgkIsveren=Math.round(brut*SGK_ISVEREN);const issizIsveren=Math.round(brut*SGK_ISSIZ_ISVEREN);
+        const isverenToplam=sgkIsveren+issizIsveren;const toplamMaliyet=brut+isverenToplam;
+        let dilim="%15";for(const dd of GV_DILIM){if(kumYeni<=dd.limit){dilim="%"+(dd.oran*100).toFixed(0);break;}}
         return{brut,sgkIsci,issizIsci,gvMatrahi,vergiyeTabiMatrah,kumMatrah:kumYeni,gv,damga,sgkIsveren,issizIsveren,isverenToplam,toplamMaliyet,dilim};
       };
 
-      const addPersonel=()=>{const ad=prompt("Ad Soyad:");if(!ad)return;const sube=prompt("Şube:");if(!sube)return;const net=Number(prompt("Net Maaş (₺):")||0);const prim=Number(prompt("Prim/Nakit (₺):")||0);const calGun=Number(prompt("Çalışma günü (26):")||26);const yemekAy=Number(prompt("Aylık Yemek Kartı Toplam (₺, Örn: 9000):")||calGun*330);const partTime=confirm("Part-time mi? (Tamam=Evet, İptal=Hayır)");const giris=prompt("İşe Giriş Tarihi (YYYY-AA-GG):")||"";const h=hesapla(net,0);update("personel",[...personel,{id:nid(),ad,sube,net,sgk:h.isverenToplam,brut:h.brut,prim,yemekAy,calGun,partTime,giris}]);};
+      const addPersonel=()=>{const ad=prompt("Ad Soyad:");if(!ad)return;const sb=prompt("Şube (Meydan/İmalathane/KTÜ/Samsun):");if(!sb)return;const net=Number(prompt("Net Maaş (₺):")||0);const prim=Number(prompt("Prim/Nakit (₺):")||0);const calGun=Number(prompt("Çalışma günü (26):")||26);const yemekAy=Number(prompt("Aylık Yemek (₺, Örn: 9000):")||calGun*330);const partTime=confirm("Part-time mi?");const giris=prompt("İşe Giriş (YYYY-AA-GG):")||"";const odemeTip=prompt("Ödeme Tipi (banka/nakit/kart):")||"banka";const odemeRef=prompt("Ödeme Ref (IBAN/Dekont No):")||"";const h=hesapla(net,0);update("personel",[...personel,{id:nid(),ad,sube:sb,net,sgk:h.isverenToplam,brut:h.brut,prim,yemekAy,calGun,partTime,giris,odemeTip,odemeRef}]);};
       const delPersonel=id=>update("personel",personel.filter(p=>p.id!==id));
 
-      /* Toplamlar — Ocak ayı bazlı (kumMatrah=0) */
-      const allCalc=filtered.map(p=>{
-        const h=hesapla(p.net,0);
-        const calGun=p.calGun||26;
+      /* ═══ TÜM personeli hesapla (filtre öncesi, konsolide için) ═══ */
+      const calcPerson=(p)=>{
+        const h=hesapla(p.net,0);const calGun=p.calGun||26;
         const yemekAy=p.yemekAy||((p.yemekGun||330)*calGun);
         const gunluk=Math.round(yemekAy/calGun*100)/100;
-        const gunlukKDVDahilSinir=330;
-        const muafGunluk=Math.min(gunluk,gunlukKDVDahilSinir);
-        const asanGunluk=Math.max(0,gunluk-gunlukKDVDahilSinir);
-        const muafAylik=Math.round(muafGunluk*calGun);
-        const asanAylik=Math.round(asanGunluk*calGun);
-        const muafKDVHaric=Math.round(Math.min(gunluk,gunlukKDVDahilSinir)/1.10*calGun);
+        const muafGunluk=Math.min(gunluk,330);const asanGunluk=Math.max(0,gunluk-330);
+        const muafAylik=Math.round(muafGunluk*calGun);const asanAylik=Math.round(asanGunluk*calGun);
+        const muafKDVHaric=Math.round(Math.min(gunluk,330)/1.10*calGun);
         const yemekKDV=Math.round(yemekAy-yemekAy/1.10);
-        /* Kıdem süresi */
         let kidemYil=0,kidemAy=0;
-        if(p.giris){const gd=new Date(p.giris);const now=new Date();const diffMs=now-gd;kidemYil=Math.floor(diffMs/(365.25*864e5));kidemAy=Math.floor((diffMs%(365.25*864e5))/(30.44*864e5));}
-        /* Tahmini kıdem tazminatı (brüt maaş bazlı, tavan kontrollü) */
-        const kidemBrut=Math.min(h.brut+(yemekAy/calGun*30),KIDEM_TAVAN*1.5);/* basit yaklaşım */
+        if(p.giris){const gd=new Date(p.giris);const now=new Date();const ms=now-gd;kidemYil=Math.floor(ms/(365.25*864e5));kidemAy=Math.floor((ms%(365.25*864e5))/(30.44*864e5));}
+        const kidemBrut=Math.min(h.brut+(yemekAy/calGun*30),KIDEM_TAVAN*1.5);
         const kidemTazminat=Math.round(kidemBrut*kidemYil);
-        /* 12 aylık kümülatif vergi projeksiyonu */
         let kumM=0;const aylikGVler=[];
-        for(let m=0;m<12;m++){const hm=hesapla(p.net,kumM);kumM=hm.kumMatrah;aylikGVler.push({ay:m+1,gv:hm.gv,dilim:hm.dilim,kumMatrah:hm.kumMatrah,net:p.net-hm.gv+hm.gv});}
+        for(let m=0;m<12;m++){const hm=hesapla(p.net,kumM);kumM=hm.kumMatrah;aylikGVler.push({ay:m+1,gv:hm.gv,dilim:hm.dilim});}
         const yillikGV=aylikGVler.reduce((s,a)=>s+a.gv,0);
-        const yillikDamga=h.damga*12;
-        return{...p,...h,yemekAy,gunluk,muafGunluk,asanGunluk,muafAylik,asanAylik,muafKDVHaric,yemekKDV,calGun,kidemYil,kidemAy,kidemTazminat,yillikGV,yillikDamga,aylikGVler};
-      });
-      const topNet=allCalc.reduce((s,p)=>s+p.net,0);
-      const topBrut=allCalc.reduce((s,p)=>s+p.brut,0);
-      const topIsverenSGK=allCalc.reduce((s,p)=>s+p.isverenToplam,0);
-      const topPrim=allCalc.reduce((s,p)=>s+(p.prim||0),0);
-      const topYemek=allCalc.reduce((s,p)=>s+p.yemekAy,0);
-      const topMuaf=allCalc.reduce((s,p)=>s+p.muafAylik,0);
-      const topAsan=allCalc.reduce((s,p)=>s+p.asanAylik,0);
-      const topMuafKDVHaric=allCalc.reduce((s,p)=>s+p.muafKDVHaric,0);
-      const topYemekKDV=allCalc.reduce((s,p)=>s+p.yemekKDV,0);
-      const topMaliyet=allCalc.reduce((s,p)=>s+p.toplamMaliyet+(p.prim||0)+p.yemekAy,0);
-      const vergiMuafiyet=topMuafKDVHaric;
+        return{...p,...h,yemekAy,gunluk,muafGunluk,asanGunluk,muafAylik,asanAylik,muafKDVHaric,yemekKDV,calGun,kidemYil,kidemAy,kidemTazminat,yillikGV,aylikGVler};
+      };
 
-      return<div>
-        {/* Maliyet Özeti */}
-        <div className="fu" style={{background:`linear-gradient(135deg,${D.blue},${D.blueDk})`,borderRadius:16,padding:14,marginBottom:10,color:D.w}}>
-          <div style={{fontSize:10,opacity:.6}}>Personel Maliyet ({co==="ltd"?"Limited":"Şahıs"}) — 2026 SGK Yasası (RG 33124)</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr 1fr",gap:4,marginTop:8}}>
-            <div><div style={{fontSize:7,opacity:.5}}>Net Maaş</div><div style={{fontSize:12,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topNet)}</div></div>
-            <div><div style={{fontSize:7,opacity:.5}}>Brüt</div><div style={{fontSize:12,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topBrut)}</div></div>
-            <div><div style={{fontSize:7,opacity:.5}}>İşveren SGK</div><div style={{fontSize:12,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topIsverenSGK)}</div></div>
-            <div><div style={{fontSize:7,opacity:.5}}>Yemek</div><div style={{fontSize:12,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topYemek)}</div></div>
-            <div><div style={{fontSize:7,opacity:.5}}>TOPLAM</div><div style={{fontSize:12,fontWeight:800,fontFamily:D.fd}}>{fmtTL(topMaliyet)}</div></div>
+      const allPersonelCalc=personel.map(calcPerson);
+
+      /* ═══ DEPARTMAN BAZLI GRUPLAMA ═══ */
+      const sirketMap={"Meydan":"ltd","İmalathane":"ltd","KTÜ":"sahis","Samsun":"sahis"};
+      const deptSummary=(dept)=>{
+        const pp=allPersonelCalc.filter(p=>p.sube===dept);
+        return{dept,sirket:sirketMap[dept]||"?",kisi:pp.length,
+          net:pp.reduce((s,p)=>s+p.net,0),brut:pp.reduce((s,p)=>s+p.brut,0),
+          sgk:pp.reduce((s,p)=>s+p.isverenToplam,0),yemek:pp.reduce((s,p)=>s+p.yemekAy,0),
+          prim:pp.reduce((s,p)=>s+(p.prim||0),0),
+          maliyet:pp.reduce((s,p)=>s+p.toplamMaliyet+(p.prim||0)+p.yemekAy,0),
+          muaf:pp.reduce((s,p)=>s+p.muafKDVHaric,0),
+          yemekKDV:pp.reduce((s,p)=>s+p.yemekKDV,0),
+          asan:pp.reduce((s,p)=>s+p.asanAylik,0),
+          personeller:pp};
+      };
+      const deptler=subeler.map(deptSummary);
+      const ltdDepts=deptler.filter(d=>d.sirket==="ltd");
+      const sahisDepts=deptler.filter(d=>d.sirket==="sahis");
+      const konsolide={
+        kisi:allPersonelCalc.length,
+        net:allPersonelCalc.reduce((s,p)=>s+p.net,0),brut:allPersonelCalc.reduce((s,p)=>s+p.brut,0),
+        sgk:allPersonelCalc.reduce((s,p)=>s+p.isverenToplam,0),yemek:allPersonelCalc.reduce((s,p)=>s+p.yemekAy,0),
+        prim:allPersonelCalc.reduce((s,p)=>s+(p.prim||0),0),
+        maliyet:allPersonelCalc.reduce((s,p)=>s+p.toplamMaliyet+(p.prim||0)+p.yemekAy,0),
+        muaf:allPersonelCalc.reduce((s,p)=>s+p.muafKDVHaric,0),
+        yemekKDV:allPersonelCalc.reduce((s,p)=>s+p.yemekKDV,0),
+        asan:allPersonelCalc.reduce((s,p)=>s+p.asanAylik,0)
+      };
+
+      /* Detay açma state'i */
+      /* Detay state'leri üst seviyede tanımlı */
+
+      /* ═══ KİŞİ DETAY KARTI ═══ */
+      const renderKisi=(p,i)=>{
+        const topKisi=p.toplamMaliyet+(p.prim||0)+p.yemekAy;
+        return<div key={p.id} className="fu" style={{background:D.w,borderRadius:14,padding:"11px 13px",boxShadow:D.s1,marginBottom:8,border:`1px solid ${D.blueBd}`,animationDelay:i*.03+"s"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:5}}>
+            <div><div style={{fontWeight:700,fontSize:13}}>{p.ad}{p.partTime&&<span style={{fontSize:8,background:D.o,color:D.w,padding:"1px 5px",borderRadius:4,marginLeft:4}}>PT</span>}</div><div style={{fontSize:9,color:D.t3}}>{p.sube}{p.giris?` • ${p.kidemYil}y ${p.kidemAy}a`:""}</div></div>
+            <div style={{display:"flex",alignItems:"center",gap:3}}>
+              <span style={{fontWeight:800,fontSize:13,color:D.blue,fontFamily:D.fd}}>{fmtTL(topKisi)}</span>
+              <button onClick={()=>setKisiDetay(kisiDetay===p.id?null:p.id)} className="tap" style={{padding:"2px 5px",borderRadius:5,border:"none",background:kisiDetay===p.id?"rgba(45,168,84,0.15)":D.blueMi,cursor:"pointer",fontSize:9,fontWeight:700,color:kisiDetay===p.id?D.g:D.blue}}>{kisiDetay===p.id?"▲":"▼"}</button>
+              <button onClick={()=>openEdit("personel",p.id)} className="tap" style={{padding:2,borderRadius:5,border:"none",background:D.blueMi,cursor:"pointer"}}><svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke={D.blue} strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4z"/></svg></button>
+              <button onClick={()=>delPersonel(p.id)} className="tap" style={{padding:2,borderRadius:5,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={11} c={D.r}/></button>
+            </div>
           </div>
-        </div>
-
-        {/* Şube Filtre */}
-        <div style={{display:"flex",gap:3,marginBottom:8}}>
-          <button onClick={()=>setPSube("tum")} className="tap" style={{padding:"4px 8px",borderRadius:8,border:"none",cursor:"pointer",background:pSube==="tum"?D.blue:D.w,color:pSube==="tum"?D.w:D.t2,fontSize:9,fontWeight:700,boxShadow:D.s1}}>Tümü ({personel.length})</button>
-          {subeler.map(s=><button key={s} onClick={()=>setPSube(s===pSube?"tum":s)} className="tap" style={{padding:"4px 8px",borderRadius:8,border:"none",cursor:"pointer",background:pSube===s?D.blue:D.w,color:pSube===s?D.w:D.t2,fontSize:9,fontWeight:700,boxShadow:D.s1}}>{s} ({personel.filter(p=>p.sube===s).length})</button>)}
-          <button onClick={addPersonel} className="tap" style={{padding:"4px 8px",borderRadius:8,border:"none",cursor:"pointer",background:D.g,color:D.w,fontSize:9,fontWeight:700,marginLeft:"auto"}}><Ic.Plus s={11} c={D.w}/> Ekle</button>
-        </div>
-
-        {/* Personel Kartları */}
-        {allCalc.map((p,i)=>{
-          const topKisi=p.toplamMaliyet+(p.prim||0)+p.yemekAy;
-          return<div key={p.id} className="fu" style={{background:D.w,borderRadius:14,padding:"11px 13px",boxShadow:D.s1,marginBottom:8,border:`1px solid ${D.blueBd}`,animationDelay:i*.03+"s"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:5}}>
-              <div><div style={{fontWeight:700,fontSize:13}}>{p.ad}{p.partTime&&<span style={{fontSize:8,background:D.o,color:D.w,padding:"1px 5px",borderRadius:4,marginLeft:4}}>PART-TIME</span>}</div><div style={{fontSize:9,color:D.t3}}>{p.sube}{p.giris?` • ${p.kidemYil}y ${p.kidemAy}a`:""}</div></div>
-              <div style={{display:"flex",alignItems:"center",gap:3}}>
-                <span style={{fontWeight:800,fontSize:13,color:D.blue,fontFamily:D.fd}}>{fmtTL(topKisi)}</span>
-                <button onClick={()=>openEdit("personel",p.id)} className="tap" style={{padding:2,borderRadius:5,border:"none",background:D.blueMi,cursor:"pointer"}}><svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke={D.blue} strokeWidth="2" strokeLinecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 013 3L12 15l-4 1 1-4z"/></svg></button>
-                <button onClick={()=>delPersonel(p.id)} className="tap" style={{padding:2,borderRadius:5,border:"none",background:D.rS,cursor:"pointer"}}><Ic.Trash s={11} c={D.r}/></button>
-              </div>
-            </div>
-            {/* Maaş Detay Grid */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,marginBottom:4}}>
+            <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Net Maaş</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(p.net)}</div></div>
+            <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Brüt Maaş</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(p.brut)}</div></div>
+            <div style={{background:D.rS,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>İşveren SGK+İşsz</div><div style={{fontSize:11,fontWeight:700,color:D.r}}>{fmtTL(p.isverenToplam)}</div></div>
+          </div>
+          {/* Genişletilmiş Detay */}
+          {kisiDetay===p.id&&<div style={{animation:"fu .3s both"}}>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,marginBottom:4}}>
-              <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Net Maaş</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(p.net)}</div></div>
-              <div style={{background:D.blueMi,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Brüt Maaş</div><div style={{fontSize:11,fontWeight:700}}>{fmtTL(p.brut)}</div></div>
-              <div style={{background:D.rS,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>İşveren SGK+İşsz</div><div style={{fontSize:11,fontWeight:700,color:D.r}}>{fmtTL(p.isverenToplam)}</div></div>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3}}>
               <div style={{background:D.blueGh,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>SGK İşveren %15.5</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(p.sgkIsveren)}</div></div>
               <div style={{background:D.blueGh,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>İşsizlik İşv. %2</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(p.issizIsveren)}</div></div>
               <div style={{background:p.prim?D.gS:D.blueGh,borderRadius:7,padding:"5px 7px"}}><div style={{fontSize:7,color:D.t3}}>Prim 💰</div><div style={{fontSize:10,fontWeight:600,color:p.prim?D.g:D.t3}}>{p.prim?fmtTL(p.prim):"—"}</div></div>
@@ -436,31 +399,173 @@ function Finance({goHome,onNav,data,setData}){
             <div style={{fontSize:8,color:D.t3,marginTop:3}}>
               Yemek: {fmtTL(p.yemekAy)}/ay ÷ {p.calGun}g = <strong style={{color:p.asanGunluk>0?D.o:D.g}}>₺{p.gunluk.toFixed(2)}/gün</strong>
               {p.asanGunluk>0?<span style={{color:D.o}}> (₺330 muaf + ₺{p.asanGunluk.toFixed(2)} vergiye tabi)</span>:<span style={{color:D.g}}> (%100 muaf ✓)</span>}
-              {" | KDV: "}{fmtTL(p.yemekKDV)}
             </div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,marginTop:3}}>
-              <div style={{background:"rgba(251,191,36,0.08)",borderRadius:7,padding:"4px 7px"}}><div style={{fontSize:7,color:D.t3}}>GV Dilimi (Ocak)</div><div style={{fontSize:10,fontWeight:700,color:"#b45309"}}>{p.dilim}</div></div>
+              <div style={{background:"rgba(251,191,36,0.08)",borderRadius:7,padding:"4px 7px"}}><div style={{fontSize:7,color:D.t3}}>GV Dilimi</div><div style={{fontSize:10,fontWeight:700,color:"#b45309"}}>{p.dilim}</div></div>
               <div style={{background:"rgba(251,191,36,0.08)",borderRadius:7,padding:"4px 7px"}}><div style={{fontSize:7,color:D.t3}}>Yıllık GV</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(p.yillikGV)}</div></div>
-              {p.kidemYil>0&&<div style={{background:"rgba(45,168,84,0.06)",borderRadius:7,padding:"4px 7px"}}><div style={{fontSize:7,color:D.t3}}>Kıdem Tazm.</div><div style={{fontSize:10,fontWeight:600,color:D.g}}>~{fmtTL(p.kidemTazminat)}</div></div>}
+              {p.kidemYil>0&&<div style={{background:D.gS,borderRadius:7,padding:"4px 7px"}}><div style={{fontSize:7,color:D.t3}}>Kıdem Tazm.</div><div style={{fontSize:10,fontWeight:600,color:D.g}}>~{fmtTL(p.kidemTazminat)}</div></div>}
             </div>
-          </div>;
-        })}
+            {/* 🛡️ Ödeme Kanıtı */}
+            <div style={{background:"rgba(27,79,142,0.04)",borderRadius:8,padding:"6px 8px",marginTop:5,border:`1px dashed ${D.blueBd}`}}>
+              <div style={{fontSize:8,fontWeight:700,color:D.blue,marginBottom:2}}>🏦 Ödeme Kanıtı</div>
+              <div style={{fontSize:9,color:D.t2}}>
+                <span style={{fontWeight:600}}>Tip:</span> {p.odemeTip==="banka"?"🏧 Banka Havalesi":p.odemeTip==="kart"?"💳 Kart/Setcard":"💵 Nakit"}
+                {p.odemeRef&&<span> • <span style={{fontWeight:600}}>Ref:</span> {p.odemeRef}</span>}
+                {!p.odemeRef&&<span style={{color:D.o}}> • ⚠️ Referans girilmemiş</span>}
+              </div>
+            </div>
+          </div>}
+        </div>;
+      };
 
-        {/* Setcard Entegrasyonu */}
-        <div className="fu" style={{background:"rgba(232,156,28,0.08)",border:"1.5px solid rgba(232,156,28,0.2)",borderRadius:14,padding:"11px 13px",marginTop:4}}>
-          <div style={{fontSize:12,fontWeight:700,color:D.o}}>🍽️ Yemek Kartı Analizi (2026 Yasası)</div>
-          <div style={{fontSize:10,color:D.t2,marginTop:3}}>Yasal sınır: Günlük ₺330 (KDV dahil) = ₺300 (KDV hariç)</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginTop:6}}>
-            <div><div style={{fontSize:8,color:D.t3}}>Aylık Toplam</div><div style={{fontSize:12,fontWeight:700}}>{fmtTL(topYemek)}</div></div>
-            <div><div style={{fontSize:8,color:D.t3}}>%10 KDV (İndirilecek)</div><div style={{fontSize:12,fontWeight:700,color:D.g}}>{fmtTL(topYemekKDV)}</div></div>
-            <div><div style={{fontSize:8,color:D.t3}}>Muaf Tutar (≤₺330/g)</div><div style={{fontSize:12,fontWeight:700,color:D.g}}>{fmtTL(topMuaf)}</div></div>
-            <div><div style={{fontSize:8,color:D.t3}}>Vergiye Tabi ({">"}₺330/g)</div><div style={{fontSize:12,fontWeight:700,color:topAsan>0?D.o:D.t3}}>{topAsan>0?fmtTL(topAsan):"₺0"}</div></div>
+      /* ═══ DEPARTMAN DETAY PANELİ ═══ */
+      const renderDeptDetay=(dept)=>{
+        const ds=deptSummary(dept);
+        return<div className="fu" style={{animation:"fu .3s both"}}>
+          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+            <button onClick={()=>{setDeptDetay(null);setPSube("tum");}} className="tap" style={{padding:"4px 8px",borderRadius:8,border:"none",background:D.blueMi,cursor:"pointer",fontSize:10,fontWeight:600,color:D.blue}}>← Geri</button>
+            <span style={{fontWeight:800,fontSize:14}}>{dept} Personel Giderleri</span>
+            <span style={{fontSize:9,color:D.t3}}>({ds.sirket==="ltd"?"Limited":"Şahıs"})</span>
           </div>
-          <div style={{display:"flex",justifyContent:"space-between",fontSize:12,fontWeight:800,borderTop:"1px solid rgba(232,156,28,0.2)",paddingTop:5,marginTop:5,color:D.g}}><span>Vergi Kalkanı</span><span>{fmtTL(Math.round(vergiMuafiyet*(co==="ltd"?0.25:0.27)))}</span></div>
-          {topAsan>0&&<div style={{fontSize:9,color:D.o,marginTop:2}}>⚠️ {allCalc.filter(p=>p.asanGunluk>0).length} personelde günlük ₺330 sınırı aşılıyor. Aşan kısım vergiye tabi.</div>}
+          {/* Departman Maliyet Özeti */}
+          <div style={{background:`linear-gradient(135deg,${D.blue},${D.blueDk})`,borderRadius:14,padding:12,marginBottom:10,color:D.w}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:4}}>
+              <div><div style={{fontSize:7,opacity:.5}}>Maaş (Net)</div><div style={{fontSize:13,fontWeight:800,fontFamily:D.fd}}>{fmtTL(ds.net)}</div></div>
+              <div><div style={{fontSize:7,opacity:.5}}>SGK İşveren</div><div style={{fontSize:13,fontWeight:800,fontFamily:D.fd}}>{fmtTL(ds.sgk)}</div></div>
+              <div><div style={{fontSize:7,opacity:.5}}>Yemek</div><div style={{fontSize:13,fontWeight:800,fontFamily:D.fd}}>{fmtTL(ds.yemek)}</div></div>
+              <div><div style={{fontSize:7,opacity:.5}}>Prim</div><div style={{fontSize:13,fontWeight:800,fontFamily:D.fd}}>{fmtTL(ds.prim)}</div></div>
+            </div>
+            <div style={{borderTop:"1px solid rgba(255,255,255,0.2)",marginTop:6,paddingTop:4,display:"flex",justifyContent:"space-between"}}>
+              <span style={{fontSize:9,opacity:.6}}>TOPLAM MALİYET</span>
+              <span style={{fontSize:15,fontWeight:800,fontFamily:D.fd}}>{fmtTL(ds.maliyet)}</span>
+            </div>
+          </div>
+          {/* Hesap Sorulabilir Tablo */}
+          <div style={{background:D.w,borderRadius:12,boxShadow:D.s1,border:`1px solid ${D.blueBd}`,overflow:"hidden",marginBottom:10}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:9}}>
+              <thead><tr style={{background:D.blueMi}}>
+                <th style={{padding:"6px 8px",textAlign:"left",fontWeight:700,color:D.blue}}>Personel</th>
+                <th style={{padding:"6px 4px",textAlign:"right",fontWeight:700,color:D.blue}}>Net</th>
+                <th style={{padding:"6px 4px",textAlign:"right",fontWeight:700,color:D.blue}}>SGK</th>
+                <th style={{padding:"6px 4px",textAlign:"right",fontWeight:700,color:D.blue}}>Yemek</th>
+                <th style={{padding:"6px 4px",textAlign:"right",fontWeight:700,color:D.blue}}>Prim</th>
+                <th style={{padding:"6px 4px",textAlign:"center",fontWeight:700,color:D.blue}}>Kanıt</th>
+              </tr></thead>
+              <tbody>{ds.personeller.map((p,i)=><tr key={p.id} style={{borderBottom:`1px solid ${D.blueBd}`,background:i%2===0?"transparent":D.blueGh}}>
+                <td style={{padding:"5px 8px",fontWeight:600}}>{p.ad}{p.partTime?" 🕐":""}</td>
+                <td style={{padding:"5px 4px",textAlign:"right"}}>{fmtTL(p.net)}</td>
+                <td style={{padding:"5px 4px",textAlign:"right",color:D.r}}>{fmtTL(p.isverenToplam)}</td>
+                <td style={{padding:"5px 4px",textAlign:"right"}}>{fmtTL(p.yemekAy)}</td>
+                <td style={{padding:"5px 4px",textAlign:"right",color:p.prim?D.g:D.t3}}>{p.prim?fmtTL(p.prim):"—"}</td>
+                <td style={{padding:"5px 4px",textAlign:"center"}}>{p.odemeTip==="banka"?"🏧":p.odemeTip==="kart"?"💳":"💵"}{p.odemeRef?<span style={{fontSize:7,color:D.g}}> ✓</span>:<span style={{fontSize:7,color:D.o}}> !</span>}</td>
+              </tr>)}</tbody>
+              <tfoot><tr style={{background:D.blueMi,fontWeight:800}}>
+                <td style={{padding:"6px 8px"}}>TOPLAM</td>
+                <td style={{padding:"6px 4px",textAlign:"right"}}>{fmtTL(ds.net)}</td>
+                <td style={{padding:"6px 4px",textAlign:"right",color:D.r}}>{fmtTL(ds.sgk)}</td>
+                <td style={{padding:"6px 4px",textAlign:"right"}}>{fmtTL(ds.yemek)}</td>
+                <td style={{padding:"6px 4px",textAlign:"right",color:D.g}}>{fmtTL(ds.prim)}</td>
+                <td style={{padding:"6px 4px",textAlign:"center"}}></td>
+              </tr></tfoot>
+            </table>
+          </div>
+          {/* Personel Kartları */}
+          {ds.personeller.map(renderKisi)}
+        </div>;
+      };
+
+      /* ═══ EĞER BİR DEPARTMAN SEÇİLMİŞSE ═══ */
+      if(deptDetay)return<div>{renderDeptDetay(deptDetay)}</div>;
+
+      /* ═══ ANA GÖRÜNÜM: 3 KATMANLI HİYERARŞİ ═══ */
+      const DeptCard=({ds,onClick})=><div onClick={onClick} className="fu tap" style={{background:D.w,borderRadius:12,padding:"10px 12px",boxShadow:D.s1,marginBottom:6,border:`1px solid ${D.blueBd}`,cursor:"pointer"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+          <div style={{fontWeight:700,fontSize:13}}>{ds.dept} <span style={{fontSize:9,color:D.t3,fontWeight:400}}>({ds.kisi} kişi)</span></div>
+          <div style={{fontWeight:800,fontSize:14,color:D.blue,fontFamily:D.fd}}>{fmtTL(ds.maliyet)}</div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:3}}>
+          <div style={{background:D.blueMi,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Net Maaş</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(ds.net)}</div></div>
+          <div style={{background:D.rS,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>SGK</div><div style={{fontSize:10,fontWeight:600,color:D.r}}>{fmtTL(ds.sgk)}</div></div>
+          <div style={{background:"rgba(232,155,28,0.06)",borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Yemek</div><div style={{fontSize:10,fontWeight:600}}>{fmtTL(ds.yemek)}</div></div>
+          <div style={{background:ds.prim?D.gS:D.blueGh,borderRadius:6,padding:"3px 6px"}}><div style={{fontSize:7,color:D.t3}}>Prim</div><div style={{fontSize:10,fontWeight:600,color:ds.prim?D.g:D.t3}}>{ds.prim?fmtTL(ds.prim):"—"}</div></div>
+        </div>
+      </div>;
+
+      return<div>
+        {/* ═══ KATMAN 3: KONSOLİDE — İMPARATORLUK ÖZETİ ═══ */}
+        <div className="fu" style={{background:`linear-gradient(135deg,#0F3A5E,#1B4F8E,#2563EB)`,borderRadius:16,padding:14,marginBottom:10,color:D.w}}>
+          <div style={{fontSize:10,opacity:.7}}>🏰 İmparatorluk Özeti — Tüm Şubeler Konsolide ({konsolide.kisi} personel)</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:4,marginTop:8}}>
+            <div><div style={{fontSize:7,opacity:.5}}>Net Maaş</div><div style={{fontSize:14,fontWeight:800,fontFamily:D.fd}}>{fmtTL(konsolide.net)}</div></div>
+            <div><div style={{fontSize:7,opacity:.5}}>İşveren SGK</div><div style={{fontSize:14,fontWeight:800,fontFamily:D.fd}}>{fmtTL(konsolide.sgk)}</div></div>
+            <div><div style={{fontSize:7,opacity:.5}}>Yemek</div><div style={{fontSize:14,fontWeight:800,fontFamily:D.fd}}>{fmtTL(konsolide.yemek)}</div></div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:4,marginTop:6}}>
+            <div><div style={{fontSize:7,opacity:.5}}>Prim (Nakit)</div><div style={{fontSize:12,fontWeight:700,fontFamily:D.fd}}>{fmtTL(konsolide.prim)}</div></div>
+            <div><div style={{fontSize:7,opacity:.5}}>TOPLAM MALİYET</div><div style={{fontSize:16,fontWeight:800,fontFamily:D.fd,textShadow:"0 0 12px rgba(255,255,255,0.3)"}}>{fmtTL(konsolide.maliyet)}</div></div>
+          </div>
         </div>
 
-        {topPrim>0&&<div className="fu" style={{background:D.rS,borderRadius:10,padding:"8px 10px",marginTop:6}}><div style={{fontSize:11,fontWeight:700,color:D.r}}>⚠️ Nakit Prim: {fmtTL(topPrim)} — Bordroya girmez</div></div>}
+        {/* ═══ KONSOLİDE TABLO ═══ */}
+        <div style={{background:D.w,borderRadius:12,boxShadow:D.s1,border:`1px solid ${D.blueBd}`,overflow:"hidden",marginBottom:10}}>
+          <div style={{padding:"8px 10px",background:D.blueMi,fontSize:10,fontWeight:700,color:D.blue}}>📊 Departman Karşılaştırma Tablosu</div>
+          <table style={{width:"100%",borderCollapse:"collapse",fontSize:9}}>
+            <thead><tr style={{background:D.blueGh}}>
+              <th style={{padding:"5px 8px",textAlign:"left",fontWeight:700}}>Departman</th>
+              <th style={{padding:"5px 4px",textAlign:"right",fontWeight:700}}>Maaş(Net)</th>
+              <th style={{padding:"5px 4px",textAlign:"right",fontWeight:700}}>SGK</th>
+              <th style={{padding:"5px 4px",textAlign:"right",fontWeight:700}}>Yemek</th>
+              <th style={{padding:"5px 4px",textAlign:"right",fontWeight:700}}>Prim</th>
+              <th style={{padding:"5px 4px",textAlign:"right",fontWeight:700}}>TOPLAM</th>
+            </tr></thead>
+            <tbody>{deptler.map((ds,i)=><tr key={ds.dept} onClick={()=>setDeptDetay(ds.dept)} style={{borderBottom:`1px solid ${D.blueBd}`,background:i%2===0?"transparent":D.blueGh,cursor:"pointer"}} className="tap">
+              <td style={{padding:"5px 8px",fontWeight:600}}>{ds.dept} <span style={{fontSize:7,color:D.t3}}>({ds.sirket==="ltd"?"Ltd":"Şhş"})</span></td>
+              <td style={{padding:"5px 4px",textAlign:"right"}}>{fmtTL(ds.net)}</td>
+              <td style={{padding:"5px 4px",textAlign:"right",color:D.r}}>{fmtTL(ds.sgk)}</td>
+              <td style={{padding:"5px 4px",textAlign:"right"}}>{fmtTL(ds.yemek)}</td>
+              <td style={{padding:"5px 4px",textAlign:"right",color:ds.prim?D.g:D.t3}}>{ds.prim?fmtTL(ds.prim):"—"}</td>
+              <td style={{padding:"5px 4px",textAlign:"right",fontWeight:700,color:D.blue}}>{fmtTL(ds.maliyet)}</td>
+            </tr>)}</tbody>
+            <tfoot><tr style={{background:D.blueMi,fontWeight:800}}>
+              <td style={{padding:"6px 8px"}}>KONSOLİDE</td>
+              <td style={{padding:"6px 4px",textAlign:"right"}}>{fmtTL(konsolide.net)}</td>
+              <td style={{padding:"6px 4px",textAlign:"right",color:D.r}}>{fmtTL(konsolide.sgk)}</td>
+              <td style={{padding:"6px 4px",textAlign:"right"}}>{fmtTL(konsolide.yemek)}</td>
+              <td style={{padding:"6px 4px",textAlign:"right",color:D.g}}>{fmtTL(konsolide.prim)}</td>
+              <td style={{padding:"6px 4px",textAlign:"right",fontWeight:800,color:D.blue}}>{fmtTL(konsolide.maliyet)}</td>
+            </tr></tfoot>
+          </table>
+        </div>
+
+        {/* ═══ KATMAN 1: ŞİRKET BAZLI ═══ */}
+        {ltdDepts.length>0&&<div style={{marginBottom:10}}>
+          <div style={{fontSize:11,fontWeight:700,color:D.blue,marginBottom:4}}>🏢 Limited Şirketi ({ltdDepts.reduce((s,d)=>s+d.kisi,0)} kişi) — {fmtTL(ltdDepts.reduce((s,d)=>s+d.maliyet,0))}</div>
+          {ltdDepts.map(ds=><DeptCard key={ds.dept} ds={ds} onClick={()=>setDeptDetay(ds.dept)}/>)}
+        </div>}
+        {sahisDepts.length>0&&<div style={{marginBottom:10}}>
+          <div style={{fontSize:11,fontWeight:700,color:D.blue,marginBottom:4}}>👤 Şahıs İşletmesi ({sahisDepts.reduce((s,d)=>s+d.kisi,0)} kişi) — {fmtTL(sahisDepts.reduce((s,d)=>s+d.maliyet,0))}</div>
+          {sahisDepts.map(ds=><DeptCard key={ds.dept} ds={ds} onClick={()=>setDeptDetay(ds.dept)}/>)}
+        </div>}
+
+        {/* Ekle Butonu */}
+        <div style={{display:"flex",justifyContent:"center",marginTop:6}}>
+          <button onClick={addPersonel} className="tap" style={{padding:"8px 20px",borderRadius:12,border:"none",background:D.g,color:D.w,fontSize:12,fontWeight:700,cursor:"pointer"}}><Ic.Plus s={13} c={D.w}/> Yeni Personel Ekle</button>
+        </div>
+
+        {/* Yemek Kartı Analizi */}
+        <div className="fu" style={{background:"rgba(232,156,28,0.08)",border:"1.5px solid rgba(232,156,28,0.2)",borderRadius:14,padding:"11px 13px",marginTop:8}}>
+          <div style={{fontSize:12,fontWeight:700,color:D.o}}>🍽️ Yemek Kartı Analizi (2026 — RG 33124)</div>
+          <div style={{fontSize:10,color:D.t2,marginTop:3}}>Yasal sınır: Günlük ₺330 (KDV dahil) = ₺300 (KDV hariç) • SGK: Kart ile tamamen muaf</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginTop:6}}>
+            <div><div style={{fontSize:8,color:D.t3}}>Aylık Toplam</div><div style={{fontSize:12,fontWeight:700}}>{fmtTL(konsolide.yemek)}</div></div>
+            <div><div style={{fontSize:8,color:D.t3}}>%10 KDV (İndirilecek)</div><div style={{fontSize:12,fontWeight:700,color:D.g}}>{fmtTL(konsolide.yemekKDV)}</div></div>
+            <div><div style={{fontSize:8,color:D.t3}}>Muaf Tutar (≤₺330/g)</div><div style={{fontSize:12,fontWeight:700,color:D.g}}>{fmtTL(konsolide.muaf)}</div></div>
+            <div><div style={{fontSize:8,color:D.t3}}>Vergiye Tabi ({">"}₺330/g)</div><div style={{fontSize:12,fontWeight:700,color:konsolide.asan>0?D.o:D.t3}}>{konsolide.asan>0?fmtTL(konsolide.asan):"₺0"}</div></div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:12,fontWeight:800,borderTop:"1px solid rgba(232,156,28,0.2)",paddingTop:5,marginTop:5,color:D.g}}><span>Vergi Kalkanı</span><span>{fmtTL(Math.round(konsolide.muaf*(co==="ltd"?0.25:0.27)))}</span></div>
+        </div>
+
+        {konsolide.prim>0&&<div className="fu" style={{background:D.rS,borderRadius:10,padding:"8px 10px",marginTop:6}}><div style={{fontSize:11,fontWeight:700,color:D.r}}>⚠️ Nakit Prim Toplamı: {fmtTL(konsolide.prim)} — Bordroya girmez</div></div>}
       </div>;
     }
     if(sub==="vergi")return<VergiPanel data={data} co={co} gp={gp}/>;
@@ -706,7 +811,7 @@ function Finance({goHome,onNav,data,setData}){
       {(sub==="vergi"||sub==="banka"||sub==="konsolide"||sub==="gider"||sub==="personel")&&renderItems()}
     </div>
     <QBar onNav={onNav} active="finance"/>
-    <Modal open={addOpen} onClose={()=>{setAddOpen(false);setEditId(null);setForm({});}} title={editId?"Düzenle":"Yeni Ekle"}>{sub==="personel"&&(editId||addOpen)&&<><Field label="Ad Soyad" value={form.ad} onChange={v=>setForm({...form,ad:v})}/><Field label="Şube" value={form.sube} onChange={v=>setForm({...form,sube:v})} placeholder="Meydan/İmalathane/KTÜ/Samsun"/><Field label="Net Maaş (₺)" value={form.net} onChange={v=>setForm({...form,net:v})} type="number"/><Field label="Prim/Nakit (₺)" value={form.prim} onChange={v=>setForm({...form,prim:v})} type="number"/><Field label="Aylık Yemek Kartı Toplam (₺)" value={form.yemekAy} onChange={v=>setForm({...form,yemekAy:v})} type="number" placeholder="Örn: 9000"/><Field label="Çalışma Günü" value={form.calGun} onChange={v=>setForm({...form,calGun:v})} type="number"/><Field label="İşe Giriş Tarihi" value={form.giris} onChange={v=>setForm({...form,giris:v})} type="date"/><div style={{marginBottom:12}}><label style={{fontSize:11,fontWeight:600,color:D.t2,display:"block",marginBottom:4}}>Çalışma Türü</label><div style={{display:"flex",gap:6}}><button type="button" onClick={()=>setForm({...form,partTime:false})} style={{flex:1,padding:"8px",borderRadius:8,border:`1.5px solid ${!form.partTime?D.blue:D.blueBd}`,background:!form.partTime?D.blueMi:D.w,color:!form.partTime?D.blue:D.t2,fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:D.f}}>Tam Zamanlı</button><button type="button" onClick={()=>setForm({...form,partTime:true})} style={{flex:1,padding:"8px",borderRadius:8,border:`1.5px solid ${form.partTime?D.o:"rgba(100,100,100,0.15)"}`,background:form.partTime?"rgba(232,155,28,0.08)":D.w,color:form.partTime?D.o:D.t2,fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:D.f}}>Part-Time</button></div></div></>}{sub!=="personel"&&renderForm()}<button onClick={editId?saveEdit:addItem} className="tap" style={{width:"100%",padding:13,borderRadius:14,border:"none",background:editId?D.g:D.blue,color:D.w,fontSize:14,fontWeight:700,cursor:"pointer",marginTop:6,fontFamily:D.f}}>{editId?"Güncelle":"Kaydet"}</button></Modal>
+    <Modal open={addOpen} onClose={()=>{setAddOpen(false);setEditId(null);setForm({});}} title={editId?"Düzenle":"Yeni Ekle"}>{sub==="personel"&&(editId||addOpen)&&<><Field label="Ad Soyad" value={form.ad} onChange={v=>setForm({...form,ad:v})}/><Field label="Şube" value={form.sube} onChange={v=>setForm({...form,sube:v})} placeholder="Meydan/İmalathane/KTÜ/Samsun"/><Field label="Net Maaş (₺)" value={form.net} onChange={v=>setForm({...form,net:v})} type="number"/><Field label="Prim/Nakit (₺)" value={form.prim} onChange={v=>setForm({...form,prim:v})} type="number"/><Field label="Aylık Yemek Kartı Toplam (₺)" value={form.yemekAy} onChange={v=>setForm({...form,yemekAy:v})} type="number" placeholder="Örn: 9000"/><Field label="Çalışma Günü" value={form.calGun} onChange={v=>setForm({...form,calGun:v})} type="number"/><Field label="İşe Giriş Tarihi" value={form.giris} onChange={v=>setForm({...form,giris:v})} type="date"/><div style={{marginBottom:12}}><label style={{fontSize:11,fontWeight:600,color:D.t2,display:"block",marginBottom:4}}>Çalışma Türü</label><div style={{display:"flex",gap:6}}><button type="button" onClick={()=>setForm({...form,partTime:false})} style={{flex:1,padding:"8px",borderRadius:8,border:`1.5px solid ${!form.partTime?D.blue:D.blueBd}`,background:!form.partTime?D.blueMi:D.w,color:!form.partTime?D.blue:D.t2,fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:D.f}}>Tam Zamanlı</button><button type="button" onClick={()=>setForm({...form,partTime:true})} style={{flex:1,padding:"8px",borderRadius:8,border:`1.5px solid ${form.partTime?D.o:"rgba(100,100,100,0.15)"}`,background:form.partTime?"rgba(232,155,28,0.08)":D.w,color:form.partTime?D.o:D.t2,fontWeight:600,fontSize:12,cursor:"pointer",fontFamily:D.f}}>Part-Time</button></div></div><Field label="Ödeme Tipi" value={form.odemeTip} onChange={v=>setForm({...form,odemeTip:v})} options={[{v:"banka",l:"🏧 Banka Havalesi"},{v:"kart",l:"💳 Kart/Setcard"},{v:"nakit",l:"💵 Nakit"}]}/><Field label="Ödeme Referansı (IBAN/Dekont No)" value={form.odemeRef} onChange={v=>setForm({...form,odemeRef:v})} placeholder="TR00 0000 ... veya Dekont No"/></>}{sub!=="personel"&&renderForm()}<button onClick={editId?saveEdit:addItem} className="tap" style={{width:"100%",padding:13,borderRadius:14,border:"none",background:editId?D.g:D.blue,color:D.w,fontSize:14,fontWeight:700,cursor:"pointer",marginTop:6,fontFamily:D.f}}>{editId?"Güncelle":"Kaydet"}</button></Modal>
   </div>;
 }
 
